@@ -1,11 +1,14 @@
 # Final Project for CS 5004 - (APPLICATION NAME/Update)
 
-(remove this and add your sections/elements)
-This readme should contain the following information: 
+Team Members:
+Name
+Ryu Hemingway
+Chiberu Egandu
+Arushi Haniyur
+Robin Rojano
 
-* The group member's names and github accounts
-* The application name and a brief description of the application
-* Links to design documents and manuals
-* Instructions on how to run the application
+Description
+CineVault is a movie catalog application that allows users to collect, organize, and browse movie information. Users can add, edit, and delete movies from a personal catalog, with each movie storing details such as title, directors, actors, genres, duration, year released, rating, and languages. Additional features include filtering by genre/rating/language, viewing average rating statistics and charts, and generating a random movie from the collection.
 
-Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
+
+
