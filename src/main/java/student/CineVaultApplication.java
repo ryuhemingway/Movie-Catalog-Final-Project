@@ -1,11 +1,11 @@
 package student;
 
 /**
- * This will be our main driver class that launches the MovieCatalogApplication.
+ * This will be our main driver class that launches the CineVault movie catalog application.
  */
-public final class MovieCatalogApplication {
+public final class CineVaultApplication {
 
-  private MovieCatalogApplication() {
+  private CineVaultApplication() {
 
   }
 

@@ -71,7 +71,7 @@ set CLASSPATH=%APP_HOME%\lib\Movie-Catalog-Final-Project.jar;%APP_HOME%\lib\java
 
 
 @rem Execute Movie-Catalog-Final-Project
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %MOVIE_CATALOG_FINAL_PROJECT_OPTS%  -classpath "%CLASSPATH%" student.MovieCatalogApplication %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %MOVIE_CATALOG_FINAL_PROJECT_OPTS%  -classpath "%CLASSPATH%" student.CineVaultApplication %*
 
 :end
 @rem End local scope for the variables with windows NT shell
