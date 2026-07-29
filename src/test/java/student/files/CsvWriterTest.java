@@ -38,4 +38,32 @@ public class CsvWriterTest {
     assertEquals(1, loadedMovies.size());
     assertEquals("The Matrix", loadedMovies.get(0).getTitle());
   }
+
+
+
+  /**
+   * This tests that writeMoviesFile() properly handles an empty movie list
+   * by writing just the header row, with no errors.
+   */
+  @Test
+  void writeMoviesFileHandlesEmptyList() throws IOException {
+    // Use a temporary file so we don't leave test files behind
+    File outputFile = File.createTempFile("test_output_empty", ".csv");
+    outputFile.deleteOnExit();
+
+    CsvWriter writer = new CsvWriter();
+    writer.writeMoviesFile(outputFile.getPath(), List.of());
+
+    // This read the file back in to make sure writing an empty list didn't break anything
+    CsvLoader loader = new CsvLoader();
+    List<Movie> loadedMovies = loader.loadMoviesFile(outputFile.getPath());
+
+    assertEquals(0, loadedMovies.size());
+  }
+
+
+
+
+
+
 }
