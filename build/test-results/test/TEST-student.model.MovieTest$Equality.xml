@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="equality is by title and year" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-07-27T21:12:48" hostname="Ryu-Hemingway" time="0.012">
+  <properties/>
+  <testcase name="sameTitleAndYearAreEqual()" classname="student.model.MovieTest$Equality" time="0.008"/>
+  <testcase name="differentTitleIsNotEqual()" classname="student.model.MovieTest$Equality" time="0.001"/>
+  <testcase name="titleComparisonIgnoresCase()" classname="student.model.MovieTest$Equality" time="0.001"/>
+  <testcase name="equalsSelf()" classname="student.model.MovieTest$Equality" time="0.0"/>
+  <testcase name="differentYearIsNotEqual()" classname="student.model.MovieTest$Equality" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
