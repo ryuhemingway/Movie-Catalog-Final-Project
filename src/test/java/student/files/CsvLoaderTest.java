@@ -38,6 +38,22 @@ public class CsvLoaderTest {
   }
 
 
+  /**
+   * This tests that loadMoviesFile() correctly reads the title and year
+   * of each movie, not just the total count.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectTitleAndYear() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    Movie firstMovie = movies.get(0);
+    assertEquals("The Matrix", firstMovie.getTitle());
+    assertEquals(1999, firstMovie.getYear());
+  }
+
+
 
 
 
