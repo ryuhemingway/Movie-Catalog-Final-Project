@@ -1,6 +1,7 @@
 package student.files;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -23,4 +24,22 @@ public class CsvLoaderTest {
 
     assertEquals(3, movies.size());
   }
+
+  /**
+   * This tests that loadMoviesFile() properly handles a missing or invalid file
+   * by throwing an exception instead of silently failing.
+   */
+  @Test
+  void loadMoviesFileThrowsExceptionForMissingFile() {
+    CsvLoader loader = new CsvLoader();
+
+    assertThrows(RuntimeException.class, () ->
+        loader.loadMoviesFile("src/test/resources/does_not_exist.csv"));
+  }
+
+
+
+
+
+
 }
