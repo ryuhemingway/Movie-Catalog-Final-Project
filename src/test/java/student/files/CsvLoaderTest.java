@@ -54,6 +54,27 @@ public class CsvLoaderTest {
   }
 
 
+  /**
+   * This tests that loadMoviesFile() correctly parses the duration field,
+   * stripping " min" from the raw CSV value.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectDuration() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    // The Matrix's runtime in our file is "136 min", so we just want the number 136
+    Movie firstMovie = movies.get(0);
+    assertEquals(136, firstMovie.getDuration());
+  }
+
+
+
+
+
+
+
 
 
 
