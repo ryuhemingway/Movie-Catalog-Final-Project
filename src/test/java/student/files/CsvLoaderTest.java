@@ -24,7 +24,6 @@ public class CsvLoaderTest {
 
     assertEquals(3, movies.size());
   }
-
   /**
    * This tests that loadMoviesFile() properly handles a missing or invalid file
    * by throwing an exception instead of silently failing.
@@ -36,8 +35,6 @@ public class CsvLoaderTest {
     assertThrows(RuntimeException.class, () ->
         loader.loadMoviesFile("src/test/resources/does_not_exist.csv"));
   }
-
-
   /**
    * This tests that loadMoviesFile() correctly reads the title and year
    * of each movie, not just the total count.
@@ -52,8 +49,6 @@ public class CsvLoaderTest {
     assertEquals("The Matrix", firstMovie.getTitle());
     assertEquals(1999, firstMovie.getYear());
   }
-
-
   /**
    * This tests that loadMoviesFile() correctly parses the duration field,
    * stripping " min" from the raw CSV value.
@@ -68,8 +63,6 @@ public class CsvLoaderTest {
     Movie firstMovie = movies.get(0);
     assertEquals(136, firstMovie.getDuration());
   }
-
-
   /**
    * This tests that loadMoviesFile() correctly reads the rating field.
    */
@@ -83,8 +76,6 @@ public class CsvLoaderTest {
     Movie firstMovie = movies.get(0);
     assertEquals(8.7, firstMovie.getRating());
   }
-
-
   /**
    * This tests that loadMoviesFile() correctly splits the genre field
    * into a list of separate genres.
@@ -99,7 +90,6 @@ public class CsvLoaderTest {
     Movie firstMovie = movies.get(0);
     assertEquals(List.of("Action", "Sci-Fi"), firstMovie.getGenres());
   }
-
   /**
    * This tests that loadMoviesFile() correctly reads the director field,
    * wrapping the single director name in a list.
@@ -114,7 +104,6 @@ public class CsvLoaderTest {
     Movie firstMovie = movies.get(0);
     assertEquals(List.of("Lana Wachowski"), firstMovie.getDirectors());
   }
-
   /**
    * This tests that loadMoviesFile() correctly combines the four star
    * columns into one list of actors.
@@ -130,8 +119,6 @@ public class CsvLoaderTest {
     assertEquals(List.of("Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss", "Hugo Weaving"),
         firstMovie.getActors());
   }
-
-
   /**
    * This tests that loadMoviesFile() correctly reads the poster URL field.
    */
@@ -145,7 +132,6 @@ public class CsvLoaderTest {
     Movie firstMovie = movies.get(0);
     assertEquals("https://example.com/matrix.jpg", firstMovie.getPosterUrl());
   }
-
   /**
    * This tests that loadMoviesFile() correctly reads the overview field.
    */
@@ -159,18 +145,5 @@ public class CsvLoaderTest {
     Movie firstMovie = movies.get(0);
     assertEquals("A hacker discovers the truth about his reality.", firstMovie.getOverview());
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

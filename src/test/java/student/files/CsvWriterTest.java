@@ -38,9 +38,6 @@ public class CsvWriterTest {
     assertEquals(1, loadedMovies.size());
     assertEquals("The Matrix", loadedMovies.get(0).getTitle());
   }
-
-
-
   /**
    * This tests that writeMoviesFile() properly handles an empty movie list
    * by writing just the header row, with no errors.
