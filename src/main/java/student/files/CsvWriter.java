@@ -30,7 +30,7 @@ public class CsvWriter {
         String durationText = movie.getDuration() + " min";
 
         String[] row = {"", movie.getTitle(), String.valueOf(movie.getYear()), "",
-            durationText, "", "", "", "", "", "", "", "", "", "", ""};
+            durationText, "", String.valueOf(movie.getRating()), "", "", "", "", "", "", "", "", ""};
         writer.writeNext(row);
       }
     } catch (IOException e) {

@@ -46,8 +46,12 @@ public class CsvLoader {
         String durationText = row[4].replace(" min", "");
         int duration = Integer.parseInt(durationText);
 
+        // IMDB rating is column 6
+        double rating = Double.parseDouble(row[6]);
+
         Movie movie = new Movie.Builder(title, year)
             .duration(duration)
+            .rating(rating)
             .build();
         // Add the movie we just built to our running list.
         movies.add(movie);
