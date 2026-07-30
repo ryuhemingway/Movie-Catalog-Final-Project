@@ -42,7 +42,7 @@ public class CsvWriter {
         String star3 = actors.size() > 2 ? actors.get(2) : "";
         String star4 = actors.size() > 3 ? actors.get(3) : "";
 
-        String[] row = {"", movie.getTitle(), String.valueOf(movie.getYear()), "",
+        String[] row = {movie.getPosterUrl(), movie.getTitle(), String.valueOf(movie.getYear()), "",
             durationText, genresText, String.valueOf(movie.getRating()), "", "", directorText,
             star1, star2, star3, star4, "", ""};
         writer.writeNext(row);
