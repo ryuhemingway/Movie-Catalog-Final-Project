@@ -29,8 +29,11 @@ public class CsvWriter {
         // We write duration back out as "136 min" so CsvLoader can read it the same way
         String durationText = movie.getDuration() + " min";
 
+        // Joins the genre list back into one comma separated string
+        String genresText = String.join(", ", movie.getGenres());
+
         String[] row = {"", movie.getTitle(), String.valueOf(movie.getYear()), "",
-            durationText, "", String.valueOf(movie.getRating()), "", "", "", "", "", "", "", "", ""};
+            durationText, genresText, String.valueOf(movie.getRating()), "", "", "", "", "", "", "", "", ""};
         writer.writeNext(row);
       }
     } catch (IOException e) {
