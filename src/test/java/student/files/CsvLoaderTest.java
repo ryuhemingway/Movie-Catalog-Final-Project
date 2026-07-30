@@ -146,6 +146,20 @@ public class CsvLoaderTest {
     assertEquals("https://example.com/matrix.jpg", firstMovie.getPosterUrl());
   }
 
+  /**
+   * This tests that loadMoviesFile() correctly reads the overview field.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectOverview() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    // The Matrix's overview in our file is this exact sentence
+    Movie firstMovie = movies.get(0);
+    assertEquals("A hacker discovers the truth about his reality.", firstMovie.getOverview());
+  }
+
 
 
 
