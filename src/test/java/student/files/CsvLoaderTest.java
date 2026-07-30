@@ -70,6 +70,21 @@ public class CsvLoaderTest {
   }
 
 
+  /**
+   * This tests that loadMoviesFile() correctly reads the rating field.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectRating() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    // The Matrix's rating in our file is 8.7
+    Movie firstMovie = movies.get(0);
+    assertEquals(8.7, firstMovie.getRating());
+  }
+
+
 
 
 
