@@ -35,8 +35,16 @@ public class CsvWriter {
         // Our file only keeps one director, so we just grab the first one from the list
         String directorText = movie.getDirectors().isEmpty() ? "" : movie.getDirectors().get(0);
 
+        // Our file has 4 separate star columns, so we grab up to 4 actors from the list
+        List<String> actors = movie.getActors();
+        String star1 = actors.size() > 0 ? actors.get(0) : "";
+        String star2 = actors.size() > 1 ? actors.get(1) : "";
+        String star3 = actors.size() > 2 ? actors.get(2) : "";
+        String star4 = actors.size() > 3 ? actors.get(3) : "";
+
         String[] row = {"", movie.getTitle(), String.valueOf(movie.getYear()), "",
-            durationText, genresText, String.valueOf(movie.getRating()), "", "", directorText, "", "", "", "", "", ""};
+            durationText, genresText, String.valueOf(movie.getRating()), "", "", directorText,
+            star1, star2, star3, star4, "", ""};
         writer.writeNext(row);
       }
     } catch (IOException e) {
