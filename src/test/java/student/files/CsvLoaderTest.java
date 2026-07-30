@@ -115,6 +115,25 @@ public class CsvLoaderTest {
     assertEquals(List.of("Lana Wachowski"), firstMovie.getDirectors());
   }
 
+  /**
+   * This tests that loadMoviesFile() correctly combines the four star
+   * columns into one list of actors.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectActors() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    // Our file has 4 star columns for The Matrix, so we expect all 4 in one list
+    Movie firstMovie = movies.get(0);
+    assertEquals(List.of("Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss", "Hugo Weaving"),
+        firstMovie.getActors());
+  }
+
+
+
+
 
 
 
