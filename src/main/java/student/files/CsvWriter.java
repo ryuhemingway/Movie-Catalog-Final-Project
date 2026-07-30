@@ -43,7 +43,7 @@ public class CsvWriter {
         String star4 = actors.size() > 3 ? actors.get(3) : "";
 
         String[] row = {movie.getPosterUrl(), movie.getTitle(), String.valueOf(movie.getYear()), "",
-            durationText, genresText, String.valueOf(movie.getRating()), "", "", directorText,
+            durationText, genresText, String.valueOf(movie.getRating()), movie.getOverview(), "", directorText,
             star1, star2, star3, star4, "", ""};
         writer.writeNext(row);
       }

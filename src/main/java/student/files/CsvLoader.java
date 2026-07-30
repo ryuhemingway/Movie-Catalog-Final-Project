@@ -62,6 +62,9 @@ public class CsvLoader {
         // Poster link is the very first column
         String posterUrl = row[0];
 
+        // Overview is column 7
+        String overview = row[7];
+
         Movie movie = new Movie.Builder(title, year)
             .duration(duration)
             .rating(rating)
@@ -69,6 +72,7 @@ public class CsvLoader {
             .directors(directors)
             .actors(actors)
             .posterUrl(posterUrl)
+            .overview(overview)
             .build();
         // Add the movie we just built to our running list.
         movies.add(movie);
