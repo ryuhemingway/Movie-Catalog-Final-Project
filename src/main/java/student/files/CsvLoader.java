@@ -56,11 +56,15 @@ public class CsvLoader {
         // Our file only has one director column, so we put it in a list of one
         List<String> directors = List.of(row[9]);
 
+        // Our file has 4 separate star columns, so we put them all in one list
+        List<String> actors = List.of(row[10], row[11], row[12], row[13]);
+
         Movie movie = new Movie.Builder(title, year)
             .duration(duration)
             .rating(rating)
             .genres(genres)
             .directors(directors)
+            .actors(actors)
             .build();
         // Add the movie we just built to our running list.
         movies.add(movie);
