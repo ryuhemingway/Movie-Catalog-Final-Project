@@ -100,6 +100,21 @@ public class CsvLoaderTest {
     assertEquals(List.of("Action", "Sci-Fi"), firstMovie.getGenres());
   }
 
+  /**
+   * This tests that loadMoviesFile() correctly reads the director field,
+   * wrapping the single director name in a list.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectDirectors() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    // Our file only has one director listed per movie, but Movie stores a list
+    Movie firstMovie = movies.get(0);
+    assertEquals(List.of("Lana Wachowski"), firstMovie.getDirectors());
+  }
+
 
 
 
