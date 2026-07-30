@@ -132,6 +132,21 @@ public class CsvLoaderTest {
   }
 
 
+  /**
+   * This tests that loadMoviesFile() correctly reads the poster URL field.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectPosterUrl() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    // The Matrix's poster link in our file is https://example.com/matrix.jpg
+    Movie firstMovie = movies.get(0);
+    assertEquals("https://example.com/matrix.jpg", firstMovie.getPosterUrl());
+  }
+
+
 
 
 
