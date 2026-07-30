@@ -49,9 +49,14 @@ public class CsvLoader {
         // IMDB rating is column 6
         double rating = Double.parseDouble(row[6]);
 
+        // Genre is one string like "Action, Sci-Fi", so we split it into a list
+        String[] genreParts = row[5].split(",\\s*");
+        List<String> genres = List.of(genreParts);
+
         Movie movie = new Movie.Builder(title, year)
             .duration(duration)
             .rating(rating)
+            .genres(genres)
             .build();
         // Add the movie we just built to our running list.
         movies.add(movie);
