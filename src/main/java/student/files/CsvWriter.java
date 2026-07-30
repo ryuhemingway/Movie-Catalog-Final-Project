@@ -26,8 +26,11 @@ public class CsvWriter {
       writer.writeNext(header);
 
       for (Movie movie : movies) {
+        // We write duration back out as "136 min" so CsvLoader can read it the same way
+        String durationText = movie.getDuration() + " min";
+
         String[] row = {"", movie.getTitle(), String.valueOf(movie.getYear()), "",
-            "", "", "", "", "", "", "", "", "", "", "", ""};
+            durationText, "", "", "", "", "", "", "", "", "", "", ""};
         writer.writeNext(row);
       }
     } catch (IOException e) {

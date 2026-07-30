@@ -42,11 +42,13 @@ public class CsvLoader {
         String title = row[1];
         int year = Integer.parseInt(row[2]);
 
-        // We use Movie's Builder to create a new Movie from this row.
-        // Right now we're only filling in title and year to keep this
-        // first test passing, we'll add more fields in later tests.
-        Movie movie = new Movie.Builder(title, year).build();
+        // Runtime looks like "136 min" in our file, so we take just the number part
+        String durationText = row[4].replace(" min", "");
+        int duration = Integer.parseInt(durationText);
 
+        Movie movie = new Movie.Builder(title, year)
+            .duration(duration)
+            .build();
         // Add the movie we just built to our running list.
         movies.add(movie);
       }
