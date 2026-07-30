@@ -85,6 +85,22 @@ public class CsvLoaderTest {
   }
 
 
+  /**
+   * This tests that loadMoviesFile() correctly splits the genre field
+   * into a list of separate genres.
+   */
+  @Test
+  void loadMoviesFileReadsCorrectGenres() {
+    CsvLoader loader = new CsvLoader();
+
+    List<Movie> movies = loader.loadMoviesFile("src/test/resources/test_movies.csv");
+
+    // The Matrix's genre in our file is "Action, Sci-Fi", so we want it split into two parts
+    Movie firstMovie = movies.get(0);
+    assertEquals(List.of("Action", "Sci-Fi"), firstMovie.getGenres());
+  }
+
+
 
 
 
