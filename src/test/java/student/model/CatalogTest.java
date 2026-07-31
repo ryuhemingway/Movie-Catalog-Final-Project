@@ -130,10 +130,4 @@ public class CatalogTest {
     List<Movie> movies = catalog.getAllMovies();
     assertEquals(0, movies.size());
   }
-
-
-
-
-
-
 }
