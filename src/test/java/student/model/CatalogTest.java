@@ -46,6 +46,22 @@ public class CatalogTest {
     assertEquals(1, movies.size());
     assertEquals(9.5, movies.get(0).getRating());
   }
+  /**
+   * This tests that deleteMovie() properly removes a movie from the catalog.
+   */
+  @Test
+  void deleteMovieRemovesMovieFromCatalog() {
+    // This starts with one movie in the catalog
+    Catalog catalog = new Catalog();
+    Movie movie = new Movie.Builder("The Matrix", 1999).build();
+    catalog.addMovie(movie);
+
+    catalog.deleteMovie(movie);
+
+    // The catalog should now be empty after deleting
+    List<Movie> movies = catalog.getAllMovies();
+    assertEquals(0, movies.size());
+  }
 
 
 
