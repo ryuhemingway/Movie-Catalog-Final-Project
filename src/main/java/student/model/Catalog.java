@@ -22,11 +22,14 @@ public class Catalog {
 
   /**
    * This method adds a movie to the catalog.
+   * Will not add duplicate if a movie with same name and year exist.
    *
    * @param movie the movie to add
    */
   public void addMovie(Movie movie) {
-    movies.add(movie);
+    if (!movies.contains(movie)) {
+      movies.add(movie);
+    }
   }
 
   /**
