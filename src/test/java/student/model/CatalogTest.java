@@ -25,6 +25,27 @@ public class CatalogTest {
     assertEquals(1, movies.size());
     assertEquals("The Matrix", movies.get(0).getTitle());
   }
+  /**
+   * This tests that editMovie() properly replaces an existing movie
+   * with an updated version.
+   */
+  @Test
+  void editMovieReplacesExistingMovie() {
+    // This starts with one movie in the catalog
+    Catalog catalog = new Catalog();
+    Movie original = new Movie.Builder("The Matrix", 1999).rating(8.7).build();
+    catalog.addMovie(original);
+
+    // Same title and year means Movie treats these as the same movie,
+    // but this one has an updated rating
+    Movie updated = new Movie.Builder("The Matrix", 1999).rating(9.5).build();
+    catalog.editMovie(updated);
+
+    // The catalog should still have just 1 movie, but with the new rating
+    List<Movie> movies = catalog.getAllMovies();
+    assertEquals(1, movies.size());
+    assertEquals(9.5, movies.get(0).getRating());
+  }
 
 
 
