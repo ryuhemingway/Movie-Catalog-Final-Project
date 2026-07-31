@@ -1,8 +1,39 @@
 package student.model;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class will hold our full collection of movies and handle adding, editing, deleting, and searching them.
  */
 public class Catalog {
 
+  // This list holds every movie currently in the catalog
+  private final List<Movie> movies;
+
+  /**
+   * This method makes a new, empty catalog.
+   */
+  public Catalog() {
+    this.movies = new ArrayList<>();
+  }
+
+  /**
+   * This method adds a movie to the catalog.
+   *
+   * @param movie the movie to add
+   */
+  public void addMovie(Movie movie) {
+    movies.add(movie);
+  }
+
+  /**
+   * This method returns every movie in the catalog.
+   *
+   * @return a list of all movies
+   */
+  public List<Movie> getAllMovies() {
+    return movies;
+  }
 }
