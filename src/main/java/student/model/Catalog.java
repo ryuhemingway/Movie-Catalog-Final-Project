@@ -36,4 +36,20 @@ public class Catalog {
   public List<Movie> getAllMovies() {
     return movies;
   }
+
+  /**
+   * This method replaces an existing movie with an updated version.
+   * Since Movie treats same title and year as the same movie,
+   * we find the old one by that and swap it out.
+   *
+   * @param updatedMovie the new version of the movie
+   */
+  public void editMovie(Movie updatedMovie) {
+    // Finds where the old version of this movie is in the list
+    int index = movies.indexOf(updatedMovie);
+
+    if (index != -1) {
+      movies.set(index, updatedMovie);
+    }
+  }
 }
