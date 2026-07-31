@@ -3,6 +3,7 @@ package student.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class will hold our full collection of movies and handle adding, editing, deleting, and searching them.
@@ -61,6 +62,31 @@ public class Catalog {
   public void deleteMovie(Movie movie) {
     movies.remove(movie);
   }
+
+  /**
+   * This method finds all movies whose title contains the given text.
+   * The search is not case sensitive, so "matrix" will still find "The Matrix".
+   *
+   * @param query the text to search for in movie titles
+   * @return a list of movies whose title contains the query
+   */
+  public List<Movie> search(String query) {
+    String lowerQuery = query.toLowerCase();
+    List<Movie> results = new ArrayList<>();
+
+    for (Movie movie : movies) {
+      String lowerTitle = movie.getTitle().toLowerCase();
+      if (lowerTitle.contains(lowerQuery)) {
+        results.add(movie);
+      }
+    }
+
+    return results;
+  }
+
+
+
+
 
 
 
