@@ -98,6 +98,39 @@ public class CatalogTest {
     List<Movie> movies = catalog.getAllMovies();
     assertEquals(1, movies.size());
   }
+  /**
+   * This tests that editMovie() does nothing if the movie is not
+   * already in the catalog, instead of crashing or adding it.
+   */
+  @Test
+  void editMovieDoesNothingIfMovieNotFound() {
+    Catalog catalog = new Catalog();
+    Movie movie = new Movie.Builder("The Matrix", 1999).build();
+
+    // Catalog is empty, so this movie was never added
+    catalog.editMovie(movie);
+
+    // Nothing should have been added here
+    List<Movie> movies = catalog.getAllMovies();
+    assertEquals(0, movies.size());
+  }
+  /**
+   * This tests that deleteMovie() does nothing if the movie is not
+   * already in the catalog, instead of crashing.
+   */
+  @Test
+  void deleteMovieDoesNothingIfMovieNotFound() {
+    Catalog catalog = new Catalog();
+    Movie movie = new Movie.Builder("The Matrix", 1999).build();
+
+    // Catalog is empty, so this movie was never added
+    catalog.deleteMovie(movie);
+
+    // Nothing should have changed, catalog should still be empty
+    List<Movie> movies = catalog.getAllMovies();
+    assertEquals(0, movies.size());
+  }
+
 
 
 
