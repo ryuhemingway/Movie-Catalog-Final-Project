@@ -62,6 +62,25 @@ public class CatalogTest {
     List<Movie> movies = catalog.getAllMovies();
     assertEquals(0, movies.size());
   }
+  /**
+   * This tests that search() finds movies whose title contains the
+   * given text, even if it's not the full title.
+   */
+  @Test
+  void searchFindsMoviesByPartialTitle() {
+    // This adds a couple movies with different titles
+    Catalog catalog = new Catalog();
+    Movie matrix = new Movie.Builder("The Matrix", 1999).build();
+    Movie inception = new Movie.Builder("Inception", 2010).build();
+    catalog.addMovie(matrix);
+    catalog.addMovie(inception);
+
+    // Search using only part of "The Matrix"
+    List<Movie> results = catalog.search("Matrix");
+
+    assertEquals(1, results.size());
+    assertEquals("The Matrix", results.get(0).getTitle());
+  }
 
 
 
