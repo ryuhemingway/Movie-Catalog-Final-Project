@@ -81,6 +81,23 @@ public class CatalogTest {
     assertEquals(1, results.size());
     assertEquals("The Matrix", results.get(0).getTitle());
   }
+  //Edge Cases
+  /**
+   * This edge case tests that addMovie() does not add a duplicate movie.
+   * Movie treats same title and year as the same movie.
+   */
+  @Test
+  void addMovieDoesNotAddDuplicateMovie() {
+    Catalog catalog = new Catalog();
+    Movie movie = new Movie.Builder("The Matrix", 1999).build();
+
+    catalog.addMovie(movie);
+    catalog.addMovie(movie);
+
+    // Adding the same movie twice should not create two entries
+    List<Movie> movies = catalog.getAllMovies();
+    assertEquals(1, movies.size());
+  }
 
 
 
