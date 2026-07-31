@@ -52,4 +52,22 @@ public class Catalog {
       movies.set(index, updatedMovie);
     }
   }
+
+  /**
+   * This method will remove a movie from the catalog.
+   *
+   * @param movie the movie to remove
+   */
+  public void deleteMovie(Movie movie) {
+    movies.remove(movie);
+  }
+
+
+
+
+
+
+
+
+
 }
