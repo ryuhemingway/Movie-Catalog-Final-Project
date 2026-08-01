@@ -1,5 +1,7 @@
 package student.controller;
 
+import java.util.List;
+import student.model.Movie;
 import student.model.Catalog;
 import student.model.MovieFilter;
 import student.model.RandomMovieGenerator;
@@ -34,5 +36,25 @@ public class MovieController {
         this.movieFilter = movieFilter;
         this.statisticsEngine = statisticsEngine;
         this.randomMovieGenerator = randomMovieGenerator;
+    }
+
+        public void addMovie(Movie movie) {
+            catalog.addMovie(movie);
+        }
+
+        public List<Movie> getAllMovies() {
+            return catalog.getAllMovies();
+        }
+
+        public void editMovie(Movie movie) {
+            catalog.editMovie(movie);
+        }
+
+        public void deleteMovie(Movie movie) {
+            catalog.deleteMovie(movie);
+        }
+
+        public List<Movie> searchMovies(String query) {
+            return catalog.search(query);
     }
 }
