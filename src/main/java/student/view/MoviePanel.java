@@ -1,26 +1,40 @@
 package student.view;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import student.model.Movie;
 
 /**
- * This class will shows the current list of movies as a grid of cards, each one
+ * This class will show the current list of movies as a grid of cards, each one
  * showing the title, year, and rating.
  */
 public class MoviePanel extends JPanel {
 
-  /** This will be how many columns of movie cards to show per row. */
+  /** This will control  many columns of movie cards to show per row. */
   private static final int COLUMNS = 3;
+  /** This will control the space between movie cards, in pixels. */
+  private static final int GAP = 10;
+  /** This is the inner panel that actually holds the movie cards. */
+  private final JPanel cardsPanel;
 
   /**
-   * This method will build an empty movie panel.
+   * This method will build an empty movie panel with the title at the top.
    */
   public MoviePanel() {
-    setLayout(new GridLayout(0, COLUMNS));
+    setLayout(new BorderLayout());
+    setBorder(new RoundedBorder(getForeground()));
+
+    JLabel titleLabel = new JLabel("MoviePanel");
+    titleLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    add(titleLabel, BorderLayout.NORTH);
+
+    cardsPanel = new JPanel(new GridLayout(0, COLUMNS, GAP, GAP));
+    add(cardsPanel, BorderLayout.CENTER);
   }
 
   /**
