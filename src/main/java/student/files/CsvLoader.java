@@ -34,48 +34,57 @@ public class CsvLoader {
 
       // Now we read the file one row at a time until there are no more rows.
       String[] row;
+      int rowNumber = 1;
       while ((row = reader.readNext()) != null) {
+        rowNumber++;
 
-        // Each row is just an array of strings, one per column.
-        // We know from our dataset that column 1 is the title
-        // and column 2 is the release year.
-        String title = row[1];
-        int year = Integer.parseInt(row[2]);
+        // We wrap this in its own try so one bad row doesn't crash the whole file
+        try {
+          // Each row is just an array of strings, one per column.
+          // We know from our dataset that column 1 is the title
+          // and column 2 is the release year.
+          String title = row[1];
+          int year = Integer.parseInt(row[2]);
 
-        // Runtime looks like "136 min" in our file, so we take just the number part
-        String durationText = row[4].replace(" min", "");
-        int duration = Integer.parseInt(durationText);
+          // Runtime looks like "136 min" in our file, so we take just the number part
+          String durationText = row[4].replace(" min", "");
+          int duration = Integer.parseInt(durationText);
 
-        // IMDB rating is column 6
-        double rating = Double.parseDouble(row[6]);
+          // IMDB rating is column 6
+          double rating = Double.parseDouble(row[6]);
 
-        // Genre is one string like "Action, Sci-Fi", so we split it into a list
-        String[] genreParts = row[5].split(",\\s*");
-        List<String> genres = List.of(genreParts);
+          // Genre is one string like "Action, Sci-Fi", so we split it into a list
+          String[] genreParts = row[5].split(",\\s*");
+          List<String> genres = List.of(genreParts);
 
-        // Our file only has one director column, so we put it in a list of one
-        List<String> directors = List.of(row[9]);
+          // Our file only has one director column, so we put it in a list of one
+          List<String> directors = List.of(row[9]);
 
-        // Our file has 4 separate star columns, so we put them all in one list
-        List<String> actors = List.of(row[10], row[11], row[12], row[13]);
+          // Our file has 4 separate star columns, so we put them all in one list
+          List<String> actors = List.of(row[10], row[11], row[12], row[13]);
 
-        // Poster link is the very first column
-        String posterUrl = row[0];
+          // Poster link is the very first column
+          String posterUrl = row[0];
 
-        // Overview is column 7
-        String overview = row[7];
+          // Overview is column 7
+          String overview = row[7];
 
-        Movie movie = new Movie.Builder(title, year)
-            .duration(duration)
-            .rating(rating)
-            .genres(genres)
-            .directors(directors)
-            .actors(actors)
-            .posterUrl(posterUrl)
-            .overview(overview)
-            .build();
-        // Add the movie we just built to our running list.
-        movies.add(movie);
+          Movie movie = new Movie.Builder(title, year)
+              .duration(duration)
+              .rating(rating)
+              .genres(genres)
+              .directors(directors)
+              .actors(actors)
+              .posterUrl(posterUrl)
+              .overview(overview)
+              .build();
+          // Add the movie we just built to our running list.
+          movies.add(movie);
+        } catch (NumberFormatException e) {
+          // If a row's data doesn't line up right (like a bad or shifted
+          // column), we skip that row instead of crashing the whole load.
+          System.out.println("Skipped bad row " + rowNumber + ": " + e.getMessage());
+        }
       }
     } catch (IOException | CsvValidationException e) {
       // If the file doesn't exist, or something goes wrong while reading it,
