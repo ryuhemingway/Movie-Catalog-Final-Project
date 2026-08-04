@@ -1,14 +1,18 @@
 package student.view;
 
-import java.awt.GridLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import student.controller.MovieController;
 import student.model.Movie;
 
@@ -18,7 +22,14 @@ import student.model.Movie;
  */
 public class ControlPanel extends JPanel {
 
-  /** The controller this panel asks to do things when a button is clicked. */
+  /** The space between items in the control panel in pixels. */
+  private static final int GAP = 12;
+  /** How wide the search field, drop downs, and buttons should be. */
+  private static final int FIELD_WIDTH = 220;
+  /** How tall the search field, drop downs, and buttons should be. */
+  private static final int FIELD_HEIGHT = 30;
+
+  /** The controller this panel asks to do tasks when a button is clicked. */
   private final MovieController controller;
   /** The panel that shows the movie cards, so we can update it after a search. */
   private final MoviePanel moviePanel;
@@ -28,6 +39,7 @@ public class ControlPanel extends JPanel {
   private JComboBox<String> genreFilter;
   /** Drop down to filter by rating. */
   private JComboBox<String> ratingFilter;
+
 
   /**
    * This builds the control panel and wires its buttons to the controller.
@@ -41,27 +53,37 @@ public class ControlPanel extends JPanel {
     this.controller = controller;
     this.moviePanel = moviePanel;
 
-    setLayout(new GridLayout(9, 1));
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    setBorder(new RoundedBorder(getForeground()));
 
-    add(new JLabel("ControlPanel"));
+    add(createCenteredLabel("ControlPanel"));
+    add(Box.createVerticalStrut(GAP));
 
     searchField = new JTextField("Search title ..");
+    fixSize(searchField);
     add(searchField);
+    add(Box.createVerticalStrut(GAP));
 
-    add(new JLabel("Filters"));
+    add(createCenteredLabel("Filters"));
+    add(Box.createVerticalStrut(GAP));
 
     genreFilter = new JComboBox<>(new String[] {"Genre: All"});
+    fixSize(genreFilter);
     add(genreFilter);
+    add(Box.createVerticalStrut(GAP));
 
     ratingFilter = new JComboBox<>(new String[] {"Rating: All"});
+    fixSize(ratingFilter);
     add(ratingFilter);
-
-    add(new JLabel("Buttons"));
+    add(Box.createVerticalStrut(GAP * 2));
 
     JButton addMovieButton = new JButton("Add Movie");
+    fixSize(addMovieButton);
     add(addMovieButton);
+    add(Box.createVerticalStrut(GAP));
 
     JButton randomMovieButton = new JButton("Pick Random Movie");
+    fixSize(randomMovieButton);
     add(randomMovieButton);
 
     // Here we link the search field so pressing Enter runs a search
@@ -88,6 +110,21 @@ public class ControlPanel extends JPanel {
   }
 
   /**
+   * This gives a component the same fixed width and height, and centers
+   * it in the panel, so the search field, drop downs, and buttons all
+   * end up matching in size.
+   *
+   * @param component the component to resize
+   */
+  private void fixSize(Component component) {
+    Dimension size = new Dimension(FIELD_WIDTH, FIELD_HEIGHT);
+    component.setPreferredSize(size);
+    component.setMinimumSize(size);
+    component.setMaximumSize(size);
+    ((javax.swing.JComponent) component).setAlignmentX(Component.CENTER_ALIGNMENT);
+  }
+
+  /**
    * This method is called when the user searches. It asks the controller for
    * matching movies and shows them in the movie panel.
    */
@@ -111,5 +148,18 @@ public class ControlPanel extends JPanel {
    */
   private void handleRandomMovie() {
     //This will be filled in once RandomMovieGenerator is built completely
+  }
+
+  /**
+   * This makes a JLabel with its text centered, so it looks like our wireframe.
+   *
+   * @param text the text to show
+   * @return a centered JLabel
+   */
+  private JLabel createCenteredLabel(String text) {
+    JLabel label = new JLabel(text);
+    label.setHorizontalAlignment(SwingConstants.CENTER);
+    label.setAlignmentX(Component.CENTER_ALIGNMENT);
+    return label;
   }
 }
