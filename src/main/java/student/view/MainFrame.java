@@ -1,6 +1,7 @@
 package student.view;
 
 import java.awt.BorderLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import student.controller.MovieController;
 
@@ -13,7 +14,9 @@ public class MainFrame extends JFrame {
   /** The width of the GUI window in pixels. */
   private static final int WINDOW_WIDTH = 900;
   /** The height of the GUI window in pixels. */
-  private static final int WINDOW_HEIGHT = 650;
+  private static final int WINDOW_HEIGHT = 700;
+  /** The space between panels, in pixels. */
+  private static final int GAP = 15;
 
   /**
    * This method builds the main window and adds all three panels to it.
@@ -25,7 +28,11 @@ public class MainFrame extends JFrame {
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    setLayout(new BorderLayout());
+    setLayout(new BorderLayout(GAP, GAP));
+
+    // This adds some empty space around the edge of the whole window
+    ((javax.swing.JPanel) getContentPane()).setBorder(
+        BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP));
 
     MoviePanel moviePanel = new MoviePanel();
     StatisticsPanel statisticsPanel = new StatisticsPanel();
@@ -35,7 +42,6 @@ public class MainFrame extends JFrame {
     add(moviePanel, BorderLayout.CENTER);
     add(statisticsPanel, BorderLayout.SOUTH);
   }
-
   /**
    * This method will show the window on screen.
    */
