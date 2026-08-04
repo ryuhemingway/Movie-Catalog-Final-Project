@@ -38,23 +38,67 @@ public class MovieController {
         this.randomMovieGenerator = randomMovieGenerator;
     }
 
+    /**
+     * Adds a movie.
+     *
+     * @param movie the movie to add
+     */
         public void addMovie(Movie movie) {
             catalog.addMovie(movie);
         }
 
+    /**
+     * Gets all movies.
+     *
+     * @return all movies
+     */
         public List<Movie> getAllMovies() {
             return catalog.getAllMovies();
         }
-
+    /**
+     * Edits a movie.
+     *
+     * @param movie the updated movie
+     */
         public void editMovie(Movie movie) {
             catalog.editMovie(movie);
         }
-
+    /**
+     * Deletes a movie.
+     *
+     * @param movie the movie to delete
+     */
         public void deleteMovie(Movie movie) {
             catalog.deleteMovie(movie);
         }
-
+    /**
+     * Searches movies by title.
+     *
+     * @param query the search text
+     * @return matching movies
+     */
         public List<Movie> searchMovies(String query) {
             return catalog.search(query);
+    }
+    /**
+     * Filters movies by genre.
+     *
+     * @param genre the selected genre
+     * @return matching movies
+     */
+    public List<Movie> filterMoviesByGenre(String genre) {
+        return movieFilter.filterByGenre(catalog.getAllMovies(), genre);
+    }
+
+    /**
+     * Filters movies by rating.
+     *
+     * @param minRating the minimum rating
+     * @param maxRating the maximum rating
+     * @return matching movies
+     */
+    public List<Movie> filterMoviesByRating(double minRating, double maxRating) {
+        return movieFilter.filterByRating(
+                catalog.getAllMovies(), minRating, maxRating);
     }
 }
