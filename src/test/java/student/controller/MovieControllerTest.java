@@ -36,7 +36,6 @@ public class MovieControllerTest {
 
         assertEquals(List.of(movie), controller.getAllMovies());
     }
-
     @Test
     void getAllMoviesReturnsEveryMovie() {
         Movie firstMovie = new Movie.Builder("The Matrix", 1999).build();
@@ -82,5 +81,39 @@ public class MovieControllerTest {
         controller.addMovie(inception);
 
         assertEquals(List.of(matrix), controller.searchMovies("matrix"));
+    }
+
+    @Test
+    void filterMoviesByGenreReturnsMatchingMovies() {
+        Movie actionMovie = new Movie.Builder("The Matrix", 1999)
+                .genres(List.of("Action", "Sci-Fi"))
+                .build();
+        Movie dramaMovie = new Movie.Builder("The Godfather", 1972)
+                .genres(List.of("Drama", "Crime"))
+                .build();
+
+        controller.addMovie(actionMovie);
+        controller.addMovie(dramaMovie);
+
+        assertEquals(
+                List.of(actionMovie),
+                controller.filterMoviesByGenre("Action"));
+    }
+
+    @Test
+    void filterMoviesByRatingReturnsMoviesInsideRange() {
+        Movie firstMovie = new Movie.Builder("The Matrix", 1999)
+                .rating(8.7)
+                .build();
+        Movie secondMovie = new Movie.Builder("Example Movie", 2020)
+                .rating(6.0)
+                .build();
+
+        controller.addMovie(firstMovie);
+        controller.addMovie(secondMovie);
+
+        assertEquals(
+                List.of(firstMovie),
+                controller.filterMoviesByRating(8.0, 9.0));
     }
 }
