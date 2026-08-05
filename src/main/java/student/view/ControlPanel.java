@@ -65,10 +65,10 @@ public class ControlPanel extends JPanel {
     add(createCenteredLabel("ControlPanel"));
     add(Box.createVerticalStrut(GAP));
 
-    // This is the main search field for finding a movie by title
+// This is the main search field for finding a movie by title
     searchField = new JTextField("Search title ..");
     fixSize(searchField);
-    addSearchPlaceholderBehavior();
+    addPlaceholderBehavior(searchField, "Search title ..");
     add(searchField);
     add(Box.createVerticalStrut(GAP));
 
@@ -142,6 +142,7 @@ public class ControlPanel extends JPanel {
 
     favoritesSearchField = new JTextField("Search Favorites ...");
     fixSize(favoritesSearchField);
+    addPlaceholderBehavior(favoritesSearchField, "Search Favorites ...");
     add(favoritesSearchField);
     add(Box.createVerticalStrut(GAP));
 
@@ -232,22 +233,25 @@ public class ControlPanel extends JPanel {
   }
 
   /**
-   * This clears the search field's placeholder text when clicked into,
-   * and puts it back if the user clicks away without typing anything.
+   * This clears a text field's placeholder text when clicked into, and
+   * puts it back if the user clicks away without typing anything.
+   *
+   * @param field the text field to add this behavior to
+   * @param placeholderText the placeholder text this field starts with
    */
-  private void addSearchPlaceholderBehavior() {
-    searchField.addFocusListener(new java.awt.event.FocusListener() {
+  private void addPlaceholderBehavior(final JTextField field, final String placeholderText) {
+    field.addFocusListener(new java.awt.event.FocusListener() {
       @Override
       public void focusGained(java.awt.event.FocusEvent e) {
-        if (searchField.getText().equals("Search title ..")) {
-          searchField.setText("");
+        if (field.getText().equals(placeholderText)) {
+          field.setText("");
         }
       }
 
       @Override
       public void focusLost(java.awt.event.FocusEvent e) {
-        if (searchField.getText().isEmpty()) {
-          searchField.setText("Search title ..");
+        if (field.getText().isEmpty()) {
+          field.setText(placeholderText);
         }
       }
     });
