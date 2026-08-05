@@ -101,4 +101,20 @@ public class MovieController {
         return movieFilter.filterByRating(
                 catalog.getAllMovies(), minRating, maxRating);
     }
+
+    /**
+     * This method picks a random movie matching the user's favourite genre and a
+     * rating of at least 8.0.
+     *
+     * @param genre the user's favourite genre
+     * @return a random matching movie, or null if none match
+     */
+    public Movie getRandomMovie(String genre) {
+        return randomMovieGenerator.getRandomMovie(genre);
+    }
+
+
+
+
+
 }
