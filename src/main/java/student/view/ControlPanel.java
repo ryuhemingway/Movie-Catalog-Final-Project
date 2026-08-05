@@ -344,7 +344,19 @@ public class ControlPanel extends JPanel {
    * now, since RandomMovieGenerator is not built yet.
    */
   private void handleRandomMovie() {
-    // TODO: needs RandomMovieGenerator to be built
+    String selectedGenre = (String) genreFilter.getSelectedItem();
+
+    // "Genre All" isn't a real genre, so we can't ask for a random
+    // movie without picking an actual genre first
+    if (selectedGenre.equals("Genre: All")) {
+      return;
+    }
+
+    Movie randomMovie = controller.getRandomMovie(selectedGenre);
+
+    if (randomMovie != null) {
+      moviePanel.showMovies(List.of(randomMovie));
+    }
   }
 
   /**
