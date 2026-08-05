@@ -21,11 +21,12 @@ public class MovieControllerTest {
 
     @BeforeEach
     void setUp() {
+        Catalog catalog = new Catalog();
         controller = new MovieController(
-                new Catalog(),
+                catalog,
                 new MovieFilter(),
                 new StatisticsEngine(),
-                new RandomMovieGenerator());
+                new RandomMovieGenerator(catalog));
     }
 
     @Test
