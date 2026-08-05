@@ -37,7 +37,7 @@ public final class CineVaultApplication {
 
     MovieFilter movieFilter = new MovieFilter();
     StatisticsEngine statisticsEngine = new StatisticsEngine();
-    RandomMovieGenerator randomMovieGenerator = new RandomMovieGenerator();
+    RandomMovieGenerator randomMovieGenerator = new RandomMovieGenerator(catalog);
 
     MovieController controller =
         new MovieController(catalog, movieFilter, statisticsEngine, randomMovieGenerator);
