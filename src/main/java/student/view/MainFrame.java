@@ -12,10 +12,7 @@ import student.controller.MovieController;
  */
 public class MainFrame extends JFrame {
 
-  /** The width of the GUI window in pixels. */
-  private static final int WINDOW_WIDTH = 900;
-  /** The height of the GUI window in pixels. */
-  private static final int WINDOW_HEIGHT = 700;
+
   /** The space between panels, in pixels. */
   private static final int GAP = 15;
 
@@ -28,20 +25,23 @@ public class MainFrame extends JFrame {
     super("CineVault");
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     setLayout(new BorderLayout(GAP, GAP));
+    setFocusable(true);
 
     // This adds some empty space around the edge of the whole window
     ((javax.swing.JPanel) getContentPane()).setBorder(
         BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP));
 
     MoviePanel moviePanel = new MoviePanel();
-    StatisticsPanel statisticsPanel = new StatisticsPanel();
+    StatisticsPanel statisticsPanel = new StatisticsPanel(controller, moviePanel);
     ControlPanel controlPanel = new ControlPanel(controller, moviePanel, statisticsPanel);
-
     add(controlPanel, BorderLayout.WEST);
     add(moviePanel, BorderLayout.CENTER);
     add(statisticsPanel, BorderLayout.SOUTH);
+
+    // This resizes the window to exactly fit everything we just added,
+    // instead of guessing a fixed pixel size
+    pack();
   }
   /**
    * This method will show the window on screen.
