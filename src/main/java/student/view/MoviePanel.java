@@ -9,12 +9,16 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import student.model.Movie;
 
+
+
 /**
  * This class will show the current list of movies as a grid of cards, each one
  * showing the title, year, and rating.
  */
 public class MoviePanel extends JPanel {
 
+  /** How many rows of movie cards to show at once. */
+  private static final int ROWS = 2;
   /** This will control  many columns of movie cards to show per row. */
   private static final int COLUMNS = 3;
   /** This will control the space between movie cards, in pixels. */
@@ -33,7 +37,9 @@ public class MoviePanel extends JPanel {
     titleLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
     add(titleLabel, BorderLayout.NORTH);
 
-    cardsPanel = new JPanel(new GridLayout(0, COLUMNS, GAP, GAP));
+    // We use a fixed 2x3 grid so a single movie result doesn't stretch to fill
+    // the whole panel, keeping cards a consistent size like our wireframe.
+    cardsPanel = new JPanel(new GridLayout(ROWS, COLUMNS, GAP, GAP));
     add(cardsPanel, BorderLayout.CENTER);
   }
 
@@ -43,17 +49,33 @@ public class MoviePanel extends JPanel {
    * @param movies the movies to display
    */
   public void showMovies(List<Movie> movies) {
-    removeAll();
+    cardsPanel.removeAll();
 
-    for (Movie movie : movies) {
-      JPanel card = new JPanel(new GridLayout(2, 1));
-      card.setBorder(BorderFactory.createLineBorder(getForeground()));
-      card.add(new JLabel(movie.getTitle()));
-      card.add(new JLabel(movie.getYear() + " - " + movie.getRating()));
-      add(card);
+    int maxVisible = ROWS * COLUMNS;
+    int count = Math.min(movies.size(), maxVisible);
+
+    for (int i = 0; i < count; i++) {
+      Movie movie = movies.get(i);
+      JPanel card = new JPanel(new GridLayout(3, 1));
+      card.setBorder(new RoundedBorder(getForeground()));
+
+      JLabel titleLabel = new JLabel(movie.getTitle(), SwingConstants.CENTER);
+      JLabel yearLabel = new JLabel("Year: " + movie.getYear(), SwingConstants.LEFT);
+      JLabel ratingLabel = new JLabel("Rating: " + movie.getRating(), SwingConstants.LEFT);
+
+      card.add(titleLabel);
+      card.add(yearLabel);
+      card.add(ratingLabel);
+      cardsPanel.add(card);
     }
 
-    revalidate();
-    repaint();
+    // We fill any leftover slots with empty panels so the grid stays
+    // fixed at 2x3 even when there are fewer results than that.
+    for (int i = count; i < maxVisible; i++) {
+      cardsPanel.add(new JPanel());
+    }
+
+    cardsPanel.revalidate();
+    cardsPanel.repaint();
   }
 }
