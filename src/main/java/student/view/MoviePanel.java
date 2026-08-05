@@ -1,4 +1,5 @@
 package student.view;
+import student.model.Movie;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -7,7 +8,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import student.model.Movie;
+import java.awt.Image;
+import java.net.URL;
+import javax.swing.ImageIcon;
+
+
 
 
 
@@ -25,6 +30,10 @@ public class MoviePanel extends JPanel {
   private static final int GAP = 10;
   /** This is the inner panel that actually holds the movie cards. */
   private final JPanel cardsPanel;
+  /** How wide the poster image should be, in pixels. */
+  private static final int POSTER_WIDTH = 80;
+  /** How tall the poster image should be, in pixels. */
+  private static final int POSTER_HEIGHT = 100;
 
   /**
    * This method will build an empty movie panel with the title at the top.
@@ -33,7 +42,7 @@ public class MoviePanel extends JPanel {
     setLayout(new BorderLayout());
     setBorder(new RoundedBorder(getForeground()));
 
-    JLabel titleLabel = new JLabel("MoviePanel");
+    JLabel titleLabel = new JLabel("MoviePanel", SwingConstants.CENTER);
     titleLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
     add(titleLabel, BorderLayout.NORTH);
 
@@ -56,16 +65,31 @@ public class MoviePanel extends JPanel {
 
     for (int i = 0; i < count; i++) {
       Movie movie = movies.get(i);
-      JPanel card = new JPanel(new GridLayout(3, 1));
+      JPanel card = new JPanel(new BorderLayout());
       card.setBorder(new RoundedBorder(getForeground()));
 
-      JLabel titleLabel = new JLabel(movie.getTitle(), SwingConstants.CENTER);
-      JLabel yearLabel = new JLabel("Year: " + movie.getYear(), SwingConstants.LEFT);
-      JLabel ratingLabel = new JLabel("Rating: " + movie.getRating(), SwingConstants.LEFT);
+      // This tries to load and show the poster image. If it fails for
+      // any reason (bad link, no internet, etc), we just skip the image
+      // instead of crashing the whole card.
+      JLabel posterLabel = new JLabel();
+      posterLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      try {
+        ImageIcon rawIcon = new ImageIcon(new URL(movie.getPosterUrl()));
+        Image scaledImage = rawIcon.getImage().getScaledInstance(
+            POSTER_WIDTH, POSTER_HEIGHT, Image.SCALE_SMOOTH);
+        posterLabel.setIcon(new ImageIcon(scaledImage));
+      } catch (Exception e) {
+        // If the poster can't be loaded, we just leave the label blank
+        System.out.println("Could not load poster for " + movie.getTitle());
+      }
+      card.add(posterLabel, BorderLayout.NORTH);
 
-      card.add(titleLabel);
-      card.add(yearLabel);
-      card.add(ratingLabel);
+      JPanel textPanel = new JPanel(new GridLayout(3, 1));
+      textPanel.add(new JLabel(movie.getTitle(), SwingConstants.CENTER));
+      textPanel.add(new JLabel("Year: " + movie.getYear(), SwingConstants.CENTER));
+      textPanel.add(new JLabel("Rating: " + movie.getRating(), SwingConstants.CENTER));
+      card.add(textPanel, BorderLayout.CENTER);
+
       cardsPanel.add(card);
     }
 
