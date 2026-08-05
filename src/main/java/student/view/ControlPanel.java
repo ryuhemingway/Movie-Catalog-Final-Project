@@ -61,6 +61,29 @@ public class ControlPanel extends JPanel {
 
     searchField = new JTextField("Search title ..");
     fixSize(searchField);
+    searchField = new JTextField("Search title ..");
+    fixSize(searchField);
+
+    // This will clear the placeholder text when the user clicks into the search field,
+    // and puts it back if they click away without typing anything.
+    searchField.addFocusListener(new java.awt.event.FocusListener() {
+      @Override
+      public void focusGained(java.awt.event.FocusEvent e) {
+        if (searchField.getText().equals("Search title ..")) {
+          searchField.setText("");
+        }
+      }
+
+      @Override
+      public void focusLost(java.awt.event.FocusEvent e) {
+        if (searchField.getText().isEmpty()) {
+          searchField.setText("Search title ..");
+        }
+      }
+    });
+
+    add(searchField);
+    add(Box.createVerticalStrut(GAP));
     add(searchField);
     add(Box.createVerticalStrut(GAP));
 
@@ -130,6 +153,9 @@ public class ControlPanel extends JPanel {
    */
   private void handleSearch() {
     String query = searchField.getText();
+    if (query.equals("Search title ..")) {
+      return;
+    }
     List<Movie> results = controller.searchMovies(query);
     moviePanel.showMovies(results);
   }
