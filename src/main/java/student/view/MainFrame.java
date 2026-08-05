@@ -3,6 +3,7 @@ package student.view;
 import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import student.controller.MovieController;
 
 /**
@@ -47,5 +48,16 @@ public class MainFrame extends JFrame {
    */
   public void start() {
     setVisible(true);
+
+    // Without this, the search field grabs focus automatically on
+    // startup of the gui, which clears its placeholder text before we even see it.
+    // Moving focus to the frame itself instead keeps the placeholder text "Search title" showing.
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        requestFocusInWindow();
+      }
+    });
   }
 }
+
