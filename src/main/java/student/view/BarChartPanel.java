@@ -19,6 +19,20 @@ public class BarChartPanel extends JPanel {
   private static final int BAR_WIDTH = 28;
   /** The space between bars, in pixels. */
   private static final int BAR_GAP = 28;
+  /** The starting x position for the first bar, in pixels. */
+  private static final int START_X = 10;
+  /** How tall the value label above each bar is, in pixels. */
+  private static final int VALUE_LABEL_HEIGHT = 15;
+  /** How much extra width the value label gets past the bar, in pixels. */
+  private static final int VALUE_LABEL_EXTRA_WIDTH = 20;
+  /** How much extra width the name label gets past the bar, in pixels. */
+  private static final int NAME_LABEL_EXTRA_WIDTH = 40;
+  /** How far below the bar the value label sits, in pixels. */
+  private static final int VALUE_LABEL_GAP = 20;
+  /** How far below the bar the name label sits, in pixels. */
+  private static final int NAME_LABEL_GAP = 5;
+  /** The smallest value we allow when scaling bars, so we never divide by zero. */
+  private static final double MIN_VALUE = 0.1;
 
   /** The current data being charted, label mapped to its value. */
   private Map<String, Double> data;
@@ -43,8 +57,8 @@ public class BarChartPanel extends JPanel {
     removeAll();
 
     // Find the biggest value so we can scale every bar against it.
-    // We start at 0.1 instead of 0 so we never divide by zero below.
-    double maxValue = 0.1;
+    // We start at MIN_VALUE instead of 0 so we never divide by zero below.
+    double maxValue = MIN_VALUE;
     for (Double value : data.values()) {
       if (value > maxValue) {
         maxValue = value;
@@ -54,7 +68,7 @@ public class BarChartPanel extends JPanel {
     // We use null layout here so we can place each label at an exact
     // x, y spot lined up with its bar, which paintComponent draws below.
     setLayout(null);
-    int x = 10;
+    int x = START_X;
     for (Map.Entry<String, Double> entry : data.entrySet()) {
       String label = entry.getKey();
       double value = entry.getValue();
@@ -62,12 +76,14 @@ public class BarChartPanel extends JPanel {
 
       // This label shows the number above or at the bar, like "8.7"
       JLabel valueLabel = new JLabel(String.valueOf(value));
-      valueLabel.setBounds(x, MAX_BAR_HEIGHT - barHeight - 20, BAR_WIDTH + 20, 15);
+      valueLabel.setBounds(x, MAX_BAR_HEIGHT - barHeight - VALUE_LABEL_GAP,
+          BAR_WIDTH + VALUE_LABEL_EXTRA_WIDTH, VALUE_LABEL_HEIGHT);
       add(valueLabel);
 
       // This label shows the genre or movie title below the bar
       JLabel nameLabel = new JLabel(label);
-      nameLabel.setBounds(x, MAX_BAR_HEIGHT + 5, BAR_WIDTH + 40, 15);
+      nameLabel.setBounds(x, MAX_BAR_HEIGHT + NAME_LABEL_GAP,
+          BAR_WIDTH + NAME_LABEL_EXTRA_WIDTH, VALUE_LABEL_HEIGHT);
       add(nameLabel);
 
       x += BAR_WIDTH + BAR_GAP;
@@ -87,11 +103,11 @@ public class BarChartPanel extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-    int x = 10;
+    int x = START_X;
     for (Double value : data.values()) {
       // We recompute maxValue here too, since paintComponent can be
       // called on its own without setData running again first.
-      double maxValue = 0.1;
+      double maxValue = MIN_VALUE;
       for (Double v : data.values()) {
         if (v > maxValue) {
           maxValue = v;
