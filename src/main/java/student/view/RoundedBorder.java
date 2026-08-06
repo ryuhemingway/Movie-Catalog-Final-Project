@@ -13,6 +13,8 @@ public class RoundedBorder extends AbstractBorder {
 
   /** How rounded the corners should be. */
   private static final int CORNER_RADIUS = 15;
+  /** How much empty space to leave around the content inside this border. */
+  private static final int BORDER_PADDING = 10;
   /** The color to draw the border in. */
   private final Color color;
 
@@ -33,6 +35,6 @@ public class RoundedBorder extends AbstractBorder {
 
   @Override
   public Insets getBorderInsets(java.awt.Component c) {
-    return new Insets(10, 10, 10, 10);
+    return new Insets(BORDER_PADDING, BORDER_PADDING, BORDER_PADDING, BORDER_PADDING);
   }
 }
