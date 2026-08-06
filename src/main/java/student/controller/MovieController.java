@@ -13,9 +13,13 @@ import student.model.StatisticsEngine;
  */
 public class MovieController {
 
+    /** The movie catalog holding all movies. */
     private final Catalog catalog;
+    /** Filters movies by genre or rating. */
     private final MovieFilter movieFilter;
+    /** Calculates statistics about the movies. */
     private final StatisticsEngine statisticsEngine;
+    /** Picks a random movie matching a genre. */
     private final RandomMovieGenerator randomMovieGenerator;
 
     /**
@@ -101,4 +105,35 @@ public class MovieController {
         return movieFilter.filterByRating(
                 catalog.getAllMovies(), minRating, maxRating);
     }
+
+    /**
+     * Filters movies by both genre and rating range at the same time.
+     *
+     * @param genre the selected genre, or "Genre: All" to skip genre filtering
+     * @param minRating the minimum rating
+     * @param maxRating the maximum rating
+     * @return matching movies
+     */
+    public List<Movie> filterMovies(String genre, double minRating, double maxRating) {
+        List<Movie> byGenre = genre.equals("Genre: All")
+            ? catalog.getAllMovies()
+            : movieFilter.filterByGenre(catalog.getAllMovies(), genre);
+        return movieFilter.filterByRating(byGenre, minRating, maxRating);
+    }
+
+    /**
+     * This method picks a random movie matching the user's favourite genre and a
+     * rating of at least 8.0.
+     *
+     * @param genre the user's favourite genre
+     * @return a random matching movie, or null if none match
+     */
+    public Movie getRandomMovie(String genre) {
+        return randomMovieGenerator.getRandomMovie(genre);
+    }
+
+
+
+
+
 }
