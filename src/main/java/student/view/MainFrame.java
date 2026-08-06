@@ -1,4 +1,5 @@
 package student.view;
+import student.model.Movie;
 
 import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
@@ -15,6 +16,8 @@ public class MainFrame extends JFrame {
 
   /** The space between panels, in pixels. */
   private static final int GAP = 15;
+  /** The panel that shows movie cards, so we can update it from outside. */
+  private final MoviePanel moviePanel;
 
   /**
    * This method builds the main window and adds all three panels to it.
@@ -32,7 +35,7 @@ public class MainFrame extends JFrame {
     ((javax.swing.JPanel) getContentPane()).setBorder(
         BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP));
 
-    MoviePanel moviePanel = new MoviePanel();
+    moviePanel = new MoviePanel();
     StatisticsPanel statisticsPanel = new StatisticsPanel(controller, moviePanel);
     ControlPanel controlPanel = new ControlPanel(controller, moviePanel, statisticsPanel);
     add(controlPanel, BorderLayout.WEST);
@@ -59,5 +62,16 @@ public class MainFrame extends JFrame {
       }
     });
   }
+
+  /**
+   * This shows a starting set of movies in the movie panel, so the
+   * window isn't empty right when it opens.
+   *
+   * @param movies the movies to show first
+   */
+  public void showInitialMovies(java.util.List<Movie> movies) {
+    moviePanel.showMovies(movies);
+  }
+
 }
 
