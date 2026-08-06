@@ -14,6 +14,8 @@ import student.view.MainFrame;
  * This will be our main driver class that launches the CineVault movie catalog application.
  */
 public final class CineVaultApplication {
+  /** How many movies to show right when the GUI first opens. */
+  private static final int INITIAL_MOVIE_COUNT = 20;
 
   private CineVaultApplication() {
 
@@ -44,5 +46,12 @@ public final class CineVaultApplication {
 
     MainFrame mainFrame = new MainFrame(controller);
     mainFrame.start();
+
+    // Show the first 20 movies right when the GUI opens, so the movie
+    // panel isn't empty before the user does anything
+    List<Movie> allMovies = controller.getAllMovies();
+    int count = Math.min(INITIAL_MOVIE_COUNT, allMovies.size());
+    List<Movie> firstMovies = allMovies.subList(0, count);
+    mainFrame.showInitialMovies(firstMovies);
   }
 }
