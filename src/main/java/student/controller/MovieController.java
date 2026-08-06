@@ -47,43 +47,47 @@ public class MovieController {
      *
      * @param movie the movie to add
      */
-        public void addMovie(Movie movie) {
-            catalog.addMovie(movie);
-        }
+    public void addMovie(Movie movie) {
+        catalog.addMovie(movie);
+    }
 
     /**
      * Gets all movies.
      *
      * @return all movies
      */
-        public List<Movie> getAllMovies() {
-            return catalog.getAllMovies();
-        }
+    public List<Movie> getAllMovies() {
+        return catalog.getAllMovies();
+    }
+
     /**
      * Edits a movie.
      *
      * @param movie the updated movie
      */
-        public void editMovie(Movie movie) {
-            catalog.editMovie(movie);
-        }
+    public void editMovie(Movie movie) {
+        catalog.editMovie(movie);
+    }
+
     /**
      * Deletes a movie.
      *
      * @param movie the movie to delete
      */
-        public void deleteMovie(Movie movie) {
-            catalog.deleteMovie(movie);
-        }
+    public void deleteMovie(Movie movie) {
+        catalog.deleteMovie(movie);
+    }
+
     /**
      * Searches movies by title.
      *
      * @param query the search text
      * @return matching movies
      */
-        public List<Movie> searchMovies(String query) {
-            return catalog.search(query);
+    public List<Movie> searchMovies(String query) {
+        return catalog.search(query);
     }
+
     /**
      * Filters movies by genre.
      *
@@ -116,8 +120,9 @@ public class MovieController {
      */
     public List<Movie> filterMovies(String genre, double minRating, double maxRating) {
         List<Movie> byGenre = genre.equals("Genre: All")
-            ? catalog.getAllMovies()
-            : movieFilter.filterByGenre(catalog.getAllMovies(), genre);
+                ? catalog.getAllMovies()
+                : movieFilter.filterByGenre(catalog.getAllMovies(), genre);
+
         return movieFilter.filterByRating(byGenre, minRating, maxRating);
     }
 
@@ -131,9 +136,4 @@ public class MovieController {
     public Movie getRandomMovie(String genre) {
         return randomMovieGenerator.getRandomMovie(genre);
     }
-
-
-
-
-
 }
