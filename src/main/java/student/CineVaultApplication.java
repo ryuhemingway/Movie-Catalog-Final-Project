@@ -9,7 +9,8 @@ import student.model.MovieFilter;
 import student.model.RandomMovieGenerator;
 import student.model.StatisticsEngine;
 import student.view.CommandLineView;
-import student.view.MainFrame;
+import student.view.GuiView;
+import student.view.IView;
 
 /**
  * This will be our main driver class that launches the CineVault movie
@@ -18,8 +19,6 @@ import student.view.MainFrame;
  */
 public final class CineVaultApplication {
 
-  /** How many movies to show right when the GUI first opens. */
-  private static final int INITIAL_MOVIE_COUNT = 20;
   /** Where our main movie list is stored on disk. */
   private static final String MOVIES_FILE_PATH = "src/main/resources/imdb_top_1000.csv";
 
@@ -34,9 +33,12 @@ public final class CineVaultApplication {
    *     run in command line mode instead of the GUI
    */
   public static void main(String[] args) {
-
-    boolean useCommandLine = args.length > 0 && args[0].equalsIgnoreCase("-cl");
-
+    // If the user typed -cl as the first argument, we run the command
+    // line version. Or we run the GUI version by default.
+    boolean useCommandLine = false;
+    if (args.length > 0 && args[0].equalsIgnoreCase("-cl")) {
+      useCommandLine = true;
+    }
 
     // We build the same model and controller either way, only the view
     // GUI window or command line menu changes based on the mode
@@ -53,19 +55,16 @@ public final class CineVaultApplication {
     MovieController controller =
         new MovieController(catalog, movieFilter, statisticsEngine, randomMovieGenerator);
 
+    // Both GuiView and CommandLineView implement the same IView
+    // interface, so this is the only place we need to pick between them.
+    // Once we have a view, we don't need to know or care which kind it
+    // is, we just call start() on it.
+    IView view;
     if (useCommandLine) {
-      CommandLineView commandLineView = new CommandLineView(controller);
-      commandLineView.start();
+      view = new CommandLineView(controller);
     } else {
-      MainFrame mainFrame = new MainFrame(controller);
-      mainFrame.start();
-
-      // Show the first 20 movies right when the GUI opens, so the movie
-      // panel isn't empty before the user does anything
-      List<Movie> allMovies = controller.getAllMovies();
-      int count = Math.min(INITIAL_MOVIE_COUNT, allMovies.size());
-      List<Movie> firstMovies = allMovies.subList(0, count);
-      mainFrame.showInitialMovies(firstMovies);
+      view = new GuiView(controller);
     }
+    view.start();
   }
 }
