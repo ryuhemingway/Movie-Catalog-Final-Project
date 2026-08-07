@@ -38,9 +38,39 @@ public class MainFrame extends JFrame {
     moviePanel = new MoviePanel();
     StatisticsPanel statisticsPanel = new StatisticsPanel(controller, moviePanel);
     ControlPanel controlPanel = new ControlPanel(controller, moviePanel, statisticsPanel);
-    add(controlPanel, BorderLayout.WEST);
+
+    // We wrap the control panel in a scroll pane, so if the window gets
+    // too small, the user can scroll down to see the buttons at the
+    // bottom instead of them just getting cut off
+// How much extra width to leave room for, so the scrollbar has its
+    // own space instead of squeezing the buttons and dropdowns
+    int scrollBarWidth = 25;
+
+    javax.swing.JScrollPane controlScrollPane = new javax.swing.JScrollPane(controlPanel);
+    controlScrollPane.setBorder(BorderFactory.createEmptyBorder());
+    controlScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    controlScrollPane.setHorizontalScrollBarPolicy(
+        javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    // We give the scroll pane a preferred size a little wider than the
+    // control panel actually needs, so the scrollbar fits in that extra
+    // space instead of cutting into the buttons and dropdowns
+    int controlPanelWidth = controlPanel.getPreferredSize().width;
+    int controlPanelHeight = controlPanel.getPreferredSize().height;
+    controlScrollPane.setPreferredSize(
+        new java.awt.Dimension(controlPanelWidth + scrollBarWidth, controlPanelHeight));
+
+    // We do the same thing for the statistics panel, in case the chart
+    // and buttons don't fit either
+    javax.swing.JScrollPane statisticsScrollPane = new javax.swing.JScrollPane(statisticsPanel);
+    statisticsScrollPane.setBorder(BorderFactory.createEmptyBorder());
+    statisticsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    statisticsScrollPane.setHorizontalScrollBarPolicy(
+        javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    add(controlScrollPane, BorderLayout.WEST);
     add(moviePanel, BorderLayout.CENTER);
-    add(statisticsPanel, BorderLayout.SOUTH);
+    add(statisticsScrollPane, BorderLayout.SOUTH);
 
     // This resizes the window to exactly fit everything we just added,
     // instead of guessing a fixed pixel size
