@@ -1,22 +1,21 @@
 package student.view;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import student.controller.MovieController;
+import student.files.CsvFavoritesRepository;
 import student.files.CsvWriter;
+import student.files.IFavorites;
 import student.model.Movie;
+import student.model.RatingRange;
 
 /**
  * This class shows a text menu in the terminal and lets the user search,
  * filter, add movies, and manage favorites, using the same controller
  * the GUI uses.
  */
-public class CommandLineView {
+public class CommandLineView implements IView {
 
   /** Where our main movie list is stored on disk. */
   private static final String MOVIES_FILE_PATH = "src/main/resources/imdb_top_1000.csv";
@@ -24,10 +23,6 @@ public class CommandLineView {
   private static final String FAVORITES_FILE_PATH = "src/main/resources/favorites.csv";
   /** How many fields a full new movie entry must have. */
   private static final int MOVIE_ENTRY_FIELD_COUNT = 9;
-  /** The lowest possible movie rating. */
-  private static final double MIN_RATING = 0.0;
-  /** The highest possible movie rating. */
-  private static final double MAX_RATING = 10.0;
   /** Index of the year field in a new movie entry. */
   private static final int YEAR_INDEX = 1;
   /** Index of the duration field in a new movie entry. */
@@ -56,6 +51,9 @@ public class CommandLineView {
   private List<Movie> lastShownMovies;
   /** This holds our current list of favorite movies. */
   private List<Movie> currentFavorites;
+  /** This loads and saves our favorites, so both the GUI and command
+   * line share the same favorites logic instead of each having a copy. */
+  private final IFavorites favoritesRepository;
 
   /**
    * This builds a command line view using the given controller.
@@ -66,14 +64,16 @@ public class CommandLineView {
     this.controller = controller;
     this.scanner = new Scanner(System.in);
     this.lastShownMovies = new ArrayList<>();
+    this.favoritesRepository = new CsvFavoritesRepository(FAVORITES_FILE_PATH);
     // We load whatever favorites already exist on disk right away, so
     // this view starts out already knowing about them, same as the GUI does
-    this.currentFavorites = loadFavoritesFromFile();
+    this.currentFavorites = favoritesRepository.loadFavorites();
   }
 
   /**
    * This starts the menu loop, and keeps running until the user quits.
    */
+  @Override
   public void start() {
     boolean keepRunning = true;
 
@@ -199,7 +199,7 @@ public class CommandLineView {
 
       try {
         double rating = Double.parseDouble(input);
-        if (rating < MIN_RATING || rating > MAX_RATING) {
+        if (rating < RatingRange.ABSOLUTE_MIN_RATING || rating > RatingRange.ABSOLUTE_MAX_RATING) {
           System.out.println("The " + label + " rating must be between 0 and 10. Try again.");
         } else {
           return rating;
@@ -292,7 +292,8 @@ public class CommandLineView {
    * This reloads our favorites from disk and prints them.
    */
   private void handleLoadFavorites() {
-    currentFavorites = loadFavoritesFromFile();
+    // ask our favorites repository to load the favorites file for us
+    currentFavorites = favoritesRepository.loadFavorites();
     // whatever we just loaded also counts as "last shown", so the user
     // could add it right back to favorites if they wanted (harmless,
     // since duplicates are skipped anyway)
@@ -342,7 +343,8 @@ public class CommandLineView {
       }
     }
 
-    saveFavoritesToFile();
+    // ask our favorites repository to save the favorites file for us
+    favoritesRepository.saveFavorites(currentFavorites);
 
     if (addedCount == 0) {
       System.out.println("All of these movies are already in your favorites.");
@@ -388,7 +390,8 @@ public class CommandLineView {
           .posterUrl(existing.getPosterUrl())
           .build();
       currentFavorites.add(updatedMovie);
-      saveFavoritesToFile();
+      // ask our favorites repository to save the favorites file for us
+      favoritesRepository.saveFavorites(currentFavorites);
 
       System.out.println("Updated: " + title + " (" + year + ") to rating " + newRating);
     } catch (NumberFormatException e) {
@@ -406,7 +409,8 @@ public class CommandLineView {
 
     if (title.equalsIgnoreCase("All")) {
       currentFavorites = new ArrayList<>();
-      saveFavoritesToFile();
+      // ask our favorites repository to save the favorites file for us
+      favoritesRepository.saveFavorites(currentFavorites);
       System.out.println("All favorites have been deleted.");
       return;
     }
@@ -427,8 +431,8 @@ public class CommandLineView {
       }
 
       currentFavorites = updatedFavorites;
-      saveFavoritesToFile();
-
+      // ask our favorites repository to save the favorites file for us
+      favoritesRepository.saveFavorites(currentFavorites);
       if (removedOne) {
         System.out.println("Removed from favorites: " + title + " (" + year + ")");
       } else {
@@ -459,54 +463,6 @@ public class CommandLineView {
     return result;
   }
 
-  /**
-   * This reads our favorites file off disk and turns it into a list of
-   * movies. Each row is title, year, rating, and the poster URL.
-   *
-   * @return the favorites we found, or an empty list if the file isn't there yet
-   */
-  private List<Movie> loadFavoritesFromFile() {
-    List<Movie> favorites = new ArrayList<>();
-    try (CSVReader reader = new CSVReader(new FileReader(FAVORITES_FILE_PATH))) {
-      reader.readNext(); // skip the header row
-      String[] row;
-      while ((row = reader.readNext()) != null) {
-        String title = row[0];
-        int year = Integer.parseInt(row[1]);
-        double rating = Double.parseDouble(row[2]);
-        String posterUrl = row.length > FAVORITE_POSTER_URL_INDEX
-            ? row[FAVORITE_POSTER_URL_INDEX] : "";
-
-        Movie movie = new Movie.Builder(title, year)
-            .rating(rating)
-            .posterUrl(posterUrl)
-            .build();
-        favorites.add(movie);
-      }
-    } catch (Exception e) {
-      // if the file doesn't exist yet, we just have no favorites, that's fine
-    }
-    return favorites;
-  }
-
-  /**
-   * This writes our current favorites list back out to the favorites file.
-   */
-  private void saveFavoritesToFile() {
-    try (CSVWriter writer = new CSVWriter(new FileWriter(FAVORITES_FILE_PATH))) {
-      writer.writeNext(new String[] {"Title", "Year", "Rating", "PosterUrl"});
-      for (Movie movie : currentFavorites) {
-        writer.writeNext(new String[] {
-            movie.getTitle(),
-            String.valueOf(movie.getYear()),
-            String.valueOf(movie.getRating()),
-            movie.getPosterUrl()
-        });
-      }
-    } catch (Exception e) {
-      System.out.println("Could not save favorites file.");
-    }
-  }
 
   /**
    * This prints out a list of movies, one per line, or a message if

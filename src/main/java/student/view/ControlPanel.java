@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,11 +17,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
 import student.controller.MovieController;
+import student.files.CsvFavoritesRepository;
 import student.files.CsvWriter;
+import student.files.IFavorites;
 import student.model.Movie;
+import student.model.RatingRange;
 
 /**
  * This class is the left side panel with the search field, filter drop downs,
@@ -67,27 +66,6 @@ public class ControlPanel extends JPanel {
   /** Index of the poster URL field in a favorites file row. */
   private static final int FAVORITE_POSTER_URL_INDEX = 3;
 
-  /** The lowest possible movie rating. */
-  private static final double MIN_RATING = 0.0;
-  /** The highest possible movie rating. */
-  private static final double MAX_RATING = 10.0;
-  /** The rating cutoff for "9.0 and above". */
-  private static final double RATING_NINE = 9.0;
-  /** The rating cutoff for "8.0 - 8.9". */
-  private static final double RATING_EIGHT = 8.0;
-  /** The top of the "8.0 - 8.9" range. */
-  private static final double RATING_EIGHT_NINE = 8.9;
-  /** The rating cutoff for "7.0 - 7.9". */
-  private static final double RATING_SEVEN = 7.0;
-  /** The top of the "7.0 - 7.9" range. */
-  private static final double RATING_SEVEN_NINE = 7.9;
-  /** The rating cutoff for "6.0 - 6.9". */
-  private static final double RATING_SIX = 6.0;
-  /** The top of the "6.0 - 6.9" range. */
-  private static final double RATING_SIX_NINE = 6.9;
-  /** The top of the "Below 6.0" range. */
-  private static final double RATING_BELOW_SIX = 5.9;
-
   /** The controller this panel asks to do tasks when a button is clicked. */
   private final MovieController controller;
   /** The panel that shows the movie cards, so we can update it after a search. */
@@ -102,6 +80,9 @@ public class ControlPanel extends JPanel {
   private JTextField favoritesSearchField;
   /** This holds our current list of favorite movies. */
   private List<Movie> currentFavorites;
+  /** This loads and saves our favorites, so both the GUI and command
+   * line share the same favorites logic instead of each having a copy. */
+  private final IFavorites favoritesRepository;
 
   /**
    * This builds the control panel and wires its buttons to the controller.
@@ -114,7 +95,8 @@ public class ControlPanel extends JPanel {
       StatisticsPanel statisticsPanel) {
     this.controller = controller;
     this.moviePanel = moviePanel;
-    this.currentFavorites = loadFavoritesFromFile();
+    this.favoritesRepository = new CsvFavoritesRepository(FAVORITES_FILE_PATH);
+    this.currentFavorites = favoritesRepository.loadFavorites();
 
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     setBorder(new RoundedBorder(getForeground()));
@@ -168,16 +150,8 @@ public class ControlPanel extends JPanel {
     add(genreFilter);
     add(Box.createVerticalStrut(GAP));
 
-    // These are rating ranges, so every movie falls into exactly one option
-    String[] ratingOptions = {
-        "Rating: All",
-        "9.0 and above",
-        "8.0 - 8.9",
-        "7.0 - 7.9",
-        "6.0 - 6.9",
-        "Below 6.0"
-    };
-    ratingFilter = new JComboBox<>(ratingOptions);
+// These are rating ranges, so every movie falls into exactly one option
+    ratingFilter = new JComboBox<>(RatingRange.allLabels());
     fixSize(ratingFilter);
     add(ratingFilter);
     add(Box.createVerticalStrut(GAP));
@@ -384,83 +358,6 @@ public class ControlPanel extends JPanel {
   }
 
   /**
-   * This will turn a rating option like "8.0 - 8.9" into a min and max
-   * number so we can pass it to the controller.
-   *
-   * @param selection the selected rating range option
-   * @return a 2 item array of {min, max}
-   */
-  private double[] parseRatingRange(String selection) {
-    // check which dropdown option it is and return the matching range
-    if (selection.equals("Rating: All")) {
-      return new double[] {MIN_RATING, MAX_RATING};
-    } else if (selection.equals("9.0 and above")) {
-      return new double[] {RATING_NINE, MAX_RATING};
-    } else if (selection.equals("8.0 - 8.9")) {
-      return new double[] {RATING_EIGHT, RATING_EIGHT_NINE};
-    } else if (selection.equals("7.0 - 7.9")) {
-      return new double[] {RATING_SEVEN, RATING_SEVEN_NINE};
-    } else if (selection.equals("6.0 - 6.9")) {
-      return new double[] {RATING_SIX, RATING_SIX_NINE};
-    } else {
-      // this is "Below 6.0"
-      return new double[] {MIN_RATING, RATING_BELOW_SIX};
-    }
-  }
-
-  /**
-   * This reads our favorites file off disk and turns it into a list of
-   * movies. Each row is title, year, rating, and the poster URL.
-   *
-   * @return the favorites we found, or an empty list if the file isn't there yet
-   */
-  private List<Movie> loadFavoritesFromFile() {
-    List<Movie> favorites = new ArrayList<>();
-    try (CSVReader reader = new CSVReader(new FileReader(FAVORITES_FILE_PATH))) {
-      reader.readNext(); // skip the header row
-      String[] row;
-      while ((row = reader.readNext()) != null) {
-        String title = row[0];
-        int year = Integer.parseInt(row[1]);
-        double rating = Double.parseDouble(row[2]);
-        String posterUrl = row.length > FAVORITE_POSTER_URL_INDEX
-            ? row[FAVORITE_POSTER_URL_INDEX] : "";
-
-        Movie movie = new Movie.Builder(title, year)
-            .rating(rating)
-            .posterUrl(posterUrl)
-            .build();
-        favorites.add(movie);
-      }
-    } catch (Exception e) {
-      // if the file doesn't exist yet, we just have no favorites, that's fine
-      System.out.println("No favorites file found yet");
-    }
-    return favorites;
-  }
-
-  /**
-   * This writes our current favorites list back out to the favorites file.
-   * We include the poster URL too, so favorites still show their poster
-   * when we load them back in later.
-   */
-  private void saveFavoritesToFile() {
-    try (CSVWriter writer = new CSVWriter(new FileWriter(FAVORITES_FILE_PATH))) {
-      writer.writeNext(new String[] {"Title", "Year", "Rating", "PosterUrl"});
-      for (Movie movie : currentFavorites) {
-        writer.writeNext(new String[] {
-            movie.getTitle(),
-            String.valueOf(movie.getYear()),
-            String.valueOf(movie.getRating()),
-            movie.getPosterUrl()
-        });
-      }
-    } catch (Exception e) {
-      System.out.println("Could not save favorites file");
-    }
-  }
-
-  /**
    * This method is called when the user searches. If a movie is found, we
    * show it. If not, we show a message telling the user how to add it
    * as a new movie using this same search box.
@@ -492,10 +389,11 @@ public class ControlPanel extends JPanel {
    */
   private void handleFilterMovies() {
     String selectedGenre = (String) genreFilter.getSelectedItem();
-    String selectedRating = (String) ratingFilter.getSelectedItem();
-    double[] range = parseRatingRange(selectedRating);
+    String selectedRatingLabel = (String) ratingFilter.getSelectedItem();
+    RatingRange ratingRange = RatingRange.fromLabel(selectedRatingLabel);
 
-    List<Movie> results = controller.filterMovies(selectedGenre, range[0], range[1]);
+    List<Movie> results = controller.filterMovies(
+        selectedGenre, ratingRange.getMinRating(), ratingRange.getMaxRating());
     moviePanel.showMovies(results);
   }
 
@@ -522,7 +420,8 @@ public class ControlPanel extends JPanel {
       }
     }
 
-    saveFavoritesToFile();
+    // ask our favorites repository to save the favorites file for us
+    favoritesRepository.saveFavorites(currentFavorites);
 
     if (addedCount == 0) {
       moviePanel.showMessage("All of these movies are already in your favorites");
@@ -596,7 +495,8 @@ public class ControlPanel extends JPanel {
    * favorites file and shows them in the movie panel.
    */
   private void handleLoadFavorites() {
-    currentFavorites = loadFavoritesFromFile();
+    // ask our favorites repository to load the favorites file for us
+    currentFavorites = favoritesRepository.loadFavorites();
     moviePanel.showMovies(currentFavorites);
   }
 
@@ -677,7 +577,8 @@ public class ControlPanel extends JPanel {
           .posterUrl(existing.getPosterUrl())
           .build();
       currentFavorites.add(updatedMovie);
-      saveFavoritesToFile();
+      // ask our favorites repository to save the favorites file for us
+      favoritesRepository.saveFavorites(currentFavorites);
       moviePanel.showMovies(List.of(updatedMovie));
     } catch (NumberFormatException e) {
       moviePanel.showMessage("Please enter a valid year and rating");
@@ -698,7 +599,8 @@ public class ControlPanel extends JPanel {
 
     if (text.trim().equalsIgnoreCase("Delete All")) {
       currentFavorites = new ArrayList<>();
-      saveFavoritesToFile();
+      // ask our favorites repository to save the favorites file for us
+      favoritesRepository.saveFavorites(currentFavorites);
       moviePanel.showMessage("All favorites have been deleted");
       return;
     }
@@ -734,7 +636,8 @@ public class ControlPanel extends JPanel {
     }
 
     currentFavorites = updatedFavorites;
-    saveFavoritesToFile();
+    // ask our favorites repository to save the favorites file for us
+    favoritesRepository.saveFavorites(currentFavorites);
 
     if (removedOne) {
       moviePanel.showMessage(
