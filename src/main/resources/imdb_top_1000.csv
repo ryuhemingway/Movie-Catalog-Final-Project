@@ -1001,3 +1001,5 @@
 "https://d8iqbmvu05s9c.cloudfront.net/ajprhqgqg1otf7d5sm7u3brf27gv","Test Movie","2001","","200 min","Action","5.0","This is a test description","","Chiberu","Robin","Aryushi","Robin","","",""
 "https://d8iqbmvu05s9c.cloudfront.net/ajprhqgqg1otf7d5sm7u3brf27gv","Test Movie 2","2002","","200 min","Chiberu","5.0","This is a test description2","","Robin","Robin","Aryushi","","","",""
 "https://example.com/fake.jpg","the matrix","1998","","100 min","Comedy","5.0","A fake duplicate entry","","Someone Else","Nobody","","","","",""
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2UXNoyH7aDx-bDSvFaoh279BEwBOvf6-jrMyDbT9Eafe9HdW4a30epWgh&s=10","Fake Movie","2001","","300 min","Action","5.0","This is a test movie","","Test Director","Test Actor","","","","",""
+"https://m.media-amazon.com/images/I/61PhAgRBZrL._AC_UF894,1000_QL80_.jpg","Test Add","2000","","200 min","Comedy","10.0","Test Movie 3 overview","","John","Test Actor","","","","",""
