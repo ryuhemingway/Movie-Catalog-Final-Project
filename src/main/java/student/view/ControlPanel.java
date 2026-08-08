@@ -123,9 +123,9 @@ public class ControlPanel extends JPanel {
    * title, and for typing a full new movie entry when nothing is found.
    */
   private void buildSearchField() {
-    searchField = new JTextField("Search title ..");
+    searchField = new JTextField("Search title or add new movie ..");
     fixSize(searchField);
-    addPlaceholderBehavior(searchField, "Search title ..");
+    addPlaceholderBehavior(searchField, "Search title or add new movie ..");
     add(searchField);
     add(Box.createVerticalStrut(GAP));
 
@@ -365,7 +365,7 @@ public class ControlPanel extends JPanel {
    */
   private void handleSearch() {
     String query = searchField.getText();
-    if (query.equals("Search title ..")) {
+    if (query.equals("Search title or add new movie ..")) {
       return;
     }
 
