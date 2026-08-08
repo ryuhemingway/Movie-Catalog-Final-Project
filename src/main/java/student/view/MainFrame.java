@@ -70,8 +70,11 @@ public class MainFrame extends JFrame {
     javax.swing.JScrollPane statisticsScrollPane = new javax.swing.JScrollPane(statisticsPanel);
     statisticsScrollPane.setBorder(BorderFactory.createEmptyBorder());
     statisticsScrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_UNIT_INCREMENT);
+    // "All genres" and "Top 10" charts can end up wider than the
+    // window, so this needs to scroll horizontally instead of never,
+    // which is what MoviePanel already does for the same reason
     statisticsScrollPane.setHorizontalScrollBarPolicy(
-        javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     add(controlScrollPane, BorderLayout.WEST);
     add(moviePanel, BorderLayout.CENTER);
