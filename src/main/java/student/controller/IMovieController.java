@@ -1,6 +1,7 @@
 package student.controller;
 
 import java.util.List;
+import java.util.Map;
 import student.model.Movie;
 
 /**
@@ -92,5 +93,21 @@ public interface IMovieController {
    * @return a random matching movie, or null if none match
    */
   Movie getRandomMovie(String genre, double minRating, double maxRating);
+
+  /**
+   * Finds the average rating for each genre, across every movie.
+   *
+   * @return genre names mapped to their average rating
+   */
+  Map<String, Double> getAverageRatingByGenre();
+
+  /**
+   * Finds the highest rated movies in a genre.
+   *
+   * @param genre the genre to filter by, or "Genre: All" for every genre
+   * @param count how many top movies to return
+   * @return the highest rated movies in that genre, best first
+   */
+  List<Movie> getTopRatedMovies(String genre, int count);
 
 }
