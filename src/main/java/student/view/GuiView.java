@@ -1,7 +1,7 @@
 package student.view;
 
 import java.util.List;
-import student.controller.MovieController;
+import student.controller.IMovieController;
 import student.model.Movie;
 
 /**
@@ -14,14 +14,14 @@ public class GuiView implements IView {
   private static final int INITIAL_MOVIE_COUNT = 20;
 
   /** The controller the GUI will use. */
-  private final MovieController controller;
+  private final IMovieController controller;
 
   /**
    * This builds a GUI view using the given controller.
    *
    * @param controller the controller the GUI will use
    */
-  public GuiView(MovieController controller) {
+  public GuiView(IMovieController controller) {
     this.controller = controller;
   }
 
