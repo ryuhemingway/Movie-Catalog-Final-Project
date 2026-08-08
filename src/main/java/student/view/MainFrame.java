@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import student.controller.MovieController;
+import student.controller.IMovieController;
 
 /**
  * This class is for the main window for CineVault. It holds the control panel on the
@@ -16,6 +16,11 @@ public class MainFrame extends JFrame {
 
   /** The space between panels, in pixels. */
   private static final int GAP = 15;
+  /** How much extra width to leave room for, so the scrollbar doesn't
+   * overlap the buttons and dropdowns. */
+  private static final int SCROLL_BAR_WIDTH = 25;
+  /** How fast the scroll wheel moves the panels, in pixels per click. */
+  private static final int SCROLL_UNIT_INCREMENT = 16;
   /** The panel that shows movie cards, so we can update it from outside. */
   private final MoviePanel moviePanel;
 
@@ -24,7 +29,7 @@ public class MainFrame extends JFrame {
    *
    * @param controller the controller this view will use to talk to the model
    */
-  public MainFrame(MovieController controller) {
+  public MainFrame(IMovieController controller) {
     super("CineVault");
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,13 +47,13 @@ public class MainFrame extends JFrame {
     // We wrap the control panel in a scroll pane, so if the window gets
     // too small, the user can scroll down to see the buttons at the
     // bottom instead of them just getting cut off
-// How much extra width to leave room for, so the scrollbar has its
+       // How much extra width to leave room for, so the scrollbar has its
     // own space instead of squeezing the buttons and dropdowns
-    int scrollBarWidth = 25;
+    int scrollBarWidth = SCROLL_BAR_WIDTH;
 
     javax.swing.JScrollPane controlScrollPane = new javax.swing.JScrollPane(controlPanel);
     controlScrollPane.setBorder(BorderFactory.createEmptyBorder());
-    controlScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    controlScrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_UNIT_INCREMENT);
     controlScrollPane.setHorizontalScrollBarPolicy(
         javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -64,7 +69,7 @@ public class MainFrame extends JFrame {
     // and buttons don't fit either
     javax.swing.JScrollPane statisticsScrollPane = new javax.swing.JScrollPane(statisticsPanel);
     statisticsScrollPane.setBorder(BorderFactory.createEmptyBorder());
-    statisticsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    statisticsScrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_UNIT_INCREMENT);
     statisticsScrollPane.setHorizontalScrollBarPolicy(
         javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
