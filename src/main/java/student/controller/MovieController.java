@@ -11,7 +11,9 @@ import student.model.StatisticsEngine;
 /**
  * This class will connect user actions from the view to the Catalog and other model classes in our program.
  */
-public class MovieController {
+// this class now implements IMovieController, so our views can depend
+// on the interface instead of this specific class
+public class MovieController implements IMovieController {
 
     /** The movie catalog holding all movies. */
     private final Catalog catalog;
@@ -47,6 +49,7 @@ public class MovieController {
      *
      * @param movie the movie to add
      */
+    @Override
     public void addMovie(Movie movie) {
         catalog.addMovie(movie);
     }
@@ -56,6 +59,7 @@ public class MovieController {
      *
      * @return all movies
      */
+    @Override
     public List<Movie> getAllMovies() {
         return catalog.getAllMovies();
     }
@@ -65,6 +69,7 @@ public class MovieController {
      *
      * @param movie the updated movie
      */
+    @Override
     public void editMovie(Movie movie) {
         catalog.editMovie(movie);
     }
@@ -74,6 +79,7 @@ public class MovieController {
      *
      * @param movie the movie to delete
      */
+    @Override
     public void deleteMovie(Movie movie) {
         catalog.deleteMovie(movie);
     }
@@ -84,6 +90,7 @@ public class MovieController {
      * @param query the search text
      * @return matching movies
      */
+    @Override
     public List<Movie> searchMovies(String query) {
         return catalog.search(query);
     }
@@ -94,6 +101,7 @@ public class MovieController {
      * @param genre the selected genre
      * @return matching movies
      */
+    @Override
     public List<Movie> filterMoviesByGenre(String genre) {
         return movieFilter.filterByGenre(catalog.getAllMovies(), genre);
     }
@@ -105,6 +113,7 @@ public class MovieController {
      * @param maxRating the maximum rating
      * @return matching movies
      */
+    @Override
     public List<Movie> filterMoviesByRating(double minRating, double maxRating) {
         return movieFilter.filterByRating(
                 catalog.getAllMovies(), minRating, maxRating);
@@ -118,6 +127,7 @@ public class MovieController {
      * @param maxRating the maximum rating
      * @return matching movies
      */
+    @Override
     public List<Movie> filterMovies(String genre, double minRating, double maxRating) {
         List<Movie> byGenre = genre.equals("Genre: All")
                 ? catalog.getAllMovies()
@@ -133,7 +143,15 @@ public class MovieController {
      * @param genre the user's favourite genre
      * @return a random matching movie, or null if none match
      */
+    @Override
     public Movie getRandomMovie(String genre) {
         return randomMovieGenerator.getRandomMovie(genre);
     }
+
+    @Override
+    public Movie getRandomMovie(String genre, double minRating, double maxRating) {
+        return randomMovieGenerator.getRandomMovie(genre, minRating, maxRating);
+    }
+
+
 }

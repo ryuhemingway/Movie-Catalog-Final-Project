@@ -3,7 +3,7 @@ package student.view;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import student.controller.MovieController;
+import student.controller.IMovieController;
 import student.files.CsvFavoritesRepository;
 import student.files.CsvWriter;
 import student.files.IFavorites;
@@ -43,7 +43,7 @@ public class CommandLineView implements IView {
   private static final int FAVORITE_POSTER_URL_INDEX = 3;
 
   /** The controller this view asks to do things when the user picks a menu option. */
-  private final MovieController controller;
+  private final IMovieController controller;
   /** Reads whatever the user types in the terminal. */
   private final Scanner scanner;
   /** This holds whatever movies were last shown, so we know what to add
@@ -60,7 +60,7 @@ public class CommandLineView implements IView {
    *
    * @param controller the controller to call for search, filter, and random pick
    */
-  public CommandLineView(MovieController controller) {
+  public CommandLineView(IMovieController controller) {
     this.controller = controller;
     this.scanner = new Scanner(System.in);
     this.lastShownMovies = new ArrayList<>();
@@ -214,14 +214,26 @@ public class CommandLineView implements IView {
    * This asks the user for a genre and prints a random movie from it.
    */
   private void handleRandomMovie() {
-    System.out.print("Enter a genre to pick a random movie from: ");
+    System.out.print("Enter a genre to pick a random movie from (or type All for every genre): ");
     String genre = scanner.nextLine().trim();
+    if (genre.equalsIgnoreCase("All")) {
+      genre = "Genre: All";
+    }
 
-    // This only picks from movies rated 8.0 or higher in that genre
-    Movie randomMovie = controller.getRandomMovie(genre);
+    // typing 0 for minimum and 10 for maximum works like "no rating filter"
+    double minRating = readValidRating("minimum");
+    double maxRating = readValidRating("maximum");
+
+    while (minRating > maxRating) {
+      System.out.println("The minimum rating can't be higher than the maximum. Try again.");
+      minRating = readValidRating("minimum");
+      maxRating = readValidRating("maximum");
+    }
+
+    Movie randomMovie = controller.getRandomMovie(genre, minRating, maxRating);
 
     if (randomMovie == null) {
-      System.out.println("No movie found in that genre with a rating of 8.0 or higher.");
+      System.out.println("No movie found matching that genre and rating range.");
     } else {
       lastShownMovies = List.of(randomMovie);
       printMovies(lastShownMovies);
