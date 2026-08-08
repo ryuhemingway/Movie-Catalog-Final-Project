@@ -1,5 +1,6 @@
 package student.view;
 
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -17,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import student.controller.MovieController;
+import student.controller.IMovieController;
 import student.files.CsvFavoritesRepository;
 import student.files.CsvWriter;
 import student.files.IFavorites;
@@ -67,7 +68,7 @@ public class ControlPanel extends JPanel {
   private static final int FAVORITE_POSTER_URL_INDEX = 3;
 
   /** The controller this panel asks to do tasks when a button is clicked. */
-  private final MovieController controller;
+  private final IMovieController controller;
   /** The panel that shows the movie cards, so we can update it after a search. */
   private final MoviePanel moviePanel;
   /** This is for where the user types part of a movie title to search for. */
@@ -91,7 +92,7 @@ public class ControlPanel extends JPanel {
    * @param moviePanel the panel to update with new results
    * @param statisticsPanel the panel to update with new stats (not used yet)
    */
-  public ControlPanel(MovieController controller, MoviePanel moviePanel,
+  public ControlPanel(IMovieController controller, MoviePanel moviePanel,
       StatisticsPanel statisticsPanel) {
     this.controller = controller;
     this.moviePanel = moviePanel;
@@ -653,19 +654,18 @@ public class ControlPanel extends JPanel {
    */
   private void handleRandomMovie() {
     String selectedGenre = (String) genreFilter.getSelectedItem();
+    String selectedRatingLabel = (String) ratingFilter.getSelectedItem();
+    RatingRange ratingRange = RatingRange.fromLabel(selectedRatingLabel);
 
-    if (selectedGenre.equals("Genre: All")) {
-      moviePanel.showMessage("Please select a specific genre before picking a random movie");
-      return;
-    }
-
-    Movie randomMovie = controller.getRandomMovie(selectedGenre);
+    // this will now work with just a genre, just a rating range, both, or
+    // neither, since "Genre: All" skips genre filtering on its own
+    Movie randomMovie = controller.getRandomMovie(
+        selectedGenre, ratingRange.getMinRating(), ratingRange.getMaxRating());
 
     if (randomMovie != null) {
       moviePanel.showMovies(List.of(randomMovie));
     } else {
-      moviePanel.showMessage(
-          "No movie found in \"" + selectedGenre + "\" with a rating of 8.0 or higher");
+      moviePanel.showMessage("No movie found matching that genre and rating range");
     }
   }
 
