@@ -17,7 +17,7 @@ The application can be run either as a graphical desktop app or as a text-based 
 - Pick a random movie from a chosen genre (rated 8.0 or higher)
 - Add a new movie to the catalog, saved back to the dataset
 - Maintain a personal favorites list: load, search, update a rating, and delete (one favorite or all at once)
-- View statistics: average rating by genre, and top rated movies, shown as a bar chart (GUI only)
+- View statistics: average rating by genre, and top rated movies in a genre, shown as a bar chart in the GUI or printed as text in the command line
 
 ## How to Compile and Run
 
@@ -146,11 +146,13 @@ Run with `.\gradlew.bat run --args="-cl"` to launch the text menu instead of the
     3) Pick a random movie
     4) Add a new movie
     5) Load favorites
-    6) Search favorites
+    6) Search favorites    
     7) Add last shown movies to favorites
     8) Update a favorite's rating
     9) Delete a favorite
-    10) Quit
+    10) Show average rating by genre
+    11) Show top rated movies by genre
+    12) Quit
 
 ### 1) Search by title
 Type a title to find matching movies. If nothing matches, you'll be told to use option 4 to add it as a new movie.
@@ -193,7 +195,17 @@ Enter a favorite's title, year, and new rating. Only an exact title and year mat
 ### 9) Delete a favorite
 Enter a title and year to remove one favorite, or type `All` for the title to clear every favorite at once.
 
-### 10) Quit
+### 10) Show average rating by genre
+Prints the average rating for every genre in the catalog, listed from the highest average rating to the lowest.
+
+_Screenshot: [average rating by genre output]_
+
+### 11) Show top rated movies by genre
+Enter a genre (or type `All` for every genre) to print the 10 highest rated movies in that genre.
+
+_Screenshot: [top rated movies output]_
+
+### 12) Quit
 Exits the program.
 
 _Screenshot: [full menu in terminal]_
