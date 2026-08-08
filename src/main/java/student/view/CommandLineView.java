@@ -2,6 +2,7 @@ package student.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import student.controller.IMovieController;
 import student.files.CsvFavoritesRepository;
@@ -41,6 +42,8 @@ public class CommandLineView implements IView {
   private static final int OVERVIEW_INDEX = 8;
   /** Index of the poster URL field in a favorites file row. */
   private static final int FAVORITE_POSTER_URL_INDEX = 3;
+  /** How many top rated movies we show at once. */
+  private static final int TOP_RATED_COUNT = 10;
 
   /** The controller this view asks to do things when the user picks a menu option. */
   private final IMovieController controller;
@@ -102,9 +105,13 @@ public class CommandLineView implements IView {
       } else if (choice.equals("9")) {
         handleDeleteFavorite();
       } else if (choice.equals("10")) {
+        handleAverageRatingByGenre();
+      } else if (choice.equals("11")) {
+        handleTopRatedByGenre();
+      } else if (choice.equals("12")) {
         keepRunning = false;
       } else {
-        System.out.println("Please enter a number from 1 to 10.");
+        System.out.println("Please enter a number from 1 to 12.");
       }
     }
 
@@ -127,7 +134,9 @@ public class CommandLineView implements IView {
     System.out.println("7) Add last shown movies to favorites");
     System.out.println("8) Update a favorite's rating");
     System.out.println("9) Delete a favorite");
-    System.out.println("10) Quit");
+    System.out.println("10) Show average rating by genre");
+    System.out.println("11) Show top rated movies by genre");
+    System.out.println("12) Quit");
     System.out.print("Choose an option: ");
   }
 
@@ -494,5 +503,59 @@ public class CommandLineView implements IView {
       System.out.println(movie.getTitle() + " (" + movie.getYear() + ") - "
           + movie.getRating());
     }
+  }
+
+  /**
+   * This asks the controller for the average rating in each genre and
+   * prints them out, highest rating first.
+   */
+  private void handleAverageRatingByGenre() {
+    Map<String, Double> averages = controller.getAverageRatingByGenre();
+
+    if (averages.isEmpty()) {
+      System.out.println("No movies found to calculate averages from.");
+      return;
+    }
+
+    // we copy the entries into a plain list first, so we can search
+    // through it and remove from it as we go, same pattern used
+    // elsewhere in this class for finding the best rated movie
+    List<Map.Entry<String, Double>> remainingEntries = new ArrayList<>(averages.entrySet());
+
+    System.out.println("Average rating by genre (highest first):");
+    while (!remainingEntries.isEmpty()) {
+      Map.Entry<String, Double> best = remainingEntries.get(0);
+
+      for (Map.Entry<String, Double> entry : remainingEntries) {
+        if (entry.getValue() > best.getValue()) {
+          best = entry;
+        }
+      }
+
+      String roundedAverage = String.format("%.1f", best.getValue());
+      System.out.println(best.getKey() + ": " + roundedAverage);
+
+      remainingEntries.remove(best);
+    }
+  }
+
+  /**
+   * This asks the user for a genre, then asks the controller for the
+   * top rated movies in that genre and prints them.
+   */
+  private void handleTopRatedByGenre() {
+    System.out.print("Enter a genre to see top rated movies for "
+        + "(or type All for every genre): ");
+    String genre = scanner.nextLine().trim();
+    if (genre.equalsIgnoreCase("All")) {
+      // this exact text is what MovieController expects to mean
+      // "skip genre filtering", same as option 2's filter
+      genre = "Genre: All";
+    }
+
+    List<Movie> topMovies = controller.getTopRatedMovies(genre, TOP_RATED_COUNT);
+    lastShownMovies = topMovies;
+
+    printMovies(topMovies);
   }
 }
