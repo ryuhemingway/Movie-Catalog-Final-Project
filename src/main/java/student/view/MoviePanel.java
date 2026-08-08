@@ -75,7 +75,10 @@ public class MoviePanel extends JPanel {
     JScrollPane scrollPane = new JScrollPane(wrapperPanel);
     scrollPane.setBorder(javax.swing.BorderFactory.createEmptyBorder());
     scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_UNIT_INCREMENT);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    // We let a horizontal scrollbar show up if the window gets too
+    // narrow, so cut off movies on the right can still be reached
+    // instead of just disappearing
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     // We give this a set preferred size up front, wide enough for a full
     // row of cards, so the window is packed with enough room from the
