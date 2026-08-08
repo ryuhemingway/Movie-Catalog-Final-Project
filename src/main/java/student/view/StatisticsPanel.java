@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import student.controller.MovieController;
+import student.controller.IMovieController;
 import student.model.Movie;
 
 /**
@@ -30,7 +30,7 @@ public class StatisticsPanel extends JPanel {
   private static final int TOP_RATED_COUNT = 10;
 
   /** The controller this panel asks for statistics data. */
-  private final MovieController controller;
+  private final IMovieController controller;
   /** The panel that shows movie cards, so top rated results can appear there too. */
   private final MoviePanel moviePanel;
   /** The chart showing whichever data was last requested. */
@@ -44,7 +44,7 @@ public class StatisticsPanel extends JPanel {
    * @param controller the controller to ask for statistics data
    * @param moviePanel the panel to update with top rated movie results
    */
-  public StatisticsPanel(MovieController controller, MoviePanel moviePanel) {
+  public StatisticsPanel(IMovieController controller, MoviePanel moviePanel) {
     this.controller = controller;
     this.moviePanel = moviePanel;
 
