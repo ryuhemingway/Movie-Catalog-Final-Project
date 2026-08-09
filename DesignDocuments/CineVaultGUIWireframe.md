@@ -9,13 +9,13 @@ Single-screen layout inside MainFrame Will Look Like This:
 - **Main area (MoviePanel):** grid of movie cards showing title, year, and rating
 - **Bottom strip (StatisticsPanel):** bar chart showing average rating by genre
 
-## Visual Of Initial CineVault GUI Design
+## Visual Of Initial CineVault GUI Design Iteration 1
 #####  Source/Refrences
 Created using [draw.io](https://app.diagrams.net/). Link to Editable Diagram: [CineVaultApplication - MainFrame GUI.drawio](https://drive.google.com/file/d/1LlVWBl9brnzGl4a1f8S5kGxPSrEE5lOa/view?usp=sharing)
 ![CineVault GUI Wireframe](screenshots/cinevault-gui-wireframe.png)
 
 
-## Visual Of Final CineVault GUI Design
+## Visual Of CineVault GUI Design iterations 2
 #####  Source/Refrences
 Created using [draw.io](https://app.diagrams.net/). Link to Editable Diagram: [CineVaultApplication - MainFrame GUI.drawio](https://drive.google.com/file/d/1LlVWBl9brnzGl4a1f8S5kGxPSrEE5lOa/view?usp=sharing)
 
@@ -25,3 +25,10 @@ Created using [draw.io](https://app.diagrams.net/). Link to Editable Diagram: [C
 ### CineVault Design For With Statistic: Show Top Rated Movies By Selected Genre
 ![CineVault GUI Wireframe](screenshots/cinevault-gui-wireframe_final_design2.png)
 
+## Visual Of CineVault GUI Design Final Designs
+![CineVault GUI Wireframe](screenshots/cinevault_final_completed_design1.png)
+![CineVault GUI Wireframe](screenshots/cinevault_final_completed_design2.png)
+
+## Visual Of CineVault GUI Design Final Designs Production
+![CineVault GUI Wireframe](screenshots/cinevault-gui-wireframe_final_design1_Production.png)
+![CineVault GUI Wireframe](screenshots/cinevault-gui-wireframe_final_design1_Production2.png)
