@@ -1,6 +1,7 @@
 package student.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class StatisticsPanel extends JPanel {
 
     setLayout(new BorderLayout());
     setBorder(new RoundedBorder(getForeground()));
-    setPreferredSize(new java.awt.Dimension(0, PANEL_HEIGHT));
 
     JLabel titleLabel = new JLabel("StatisticsPanel", SwingConstants.CENTER);
     add(titleLabel, BorderLayout.NORTH);
@@ -106,82 +106,57 @@ public class StatisticsPanel extends JPanel {
 
   /**
    * This is called when Show average rating by genre is clicked. It
-   * works out the average rating per genre and charts it.
-   *
-   * NOTE: this should move into StatisticsEngine once it's built, this
-   * is just here for now so the button does something.
+   * asks the controller for the average rating per genre, sorts the
+   * results highest to lowest, and charts them.
    */
   private void handleAverageByGenre() {
-    // these 3 lists line up together: genreNames.get(i) matches
-    // genreSums.get(i) and genreCounts.get(i)
-    List<String> genreNames = new ArrayList<>();
-    List<Double> genreSums = new ArrayList<>();
-    List<Integer> genreCounts = new ArrayList<>();
+    Map<String, Double> averages = controller.getAverageRatingByGenre();
+    Map<String, Double> sortedAverages = sortByValueDescending(averages);
 
-    for (Movie movie : controller.getAllMovies()) {
-      for (String genre : movie.getGenres()) {
-        int index = genreNames.indexOf(genre);
-
-        if (index == -1) {
-          // haven't seen this genre yet, add it fresh
-          genreNames.add(genre);
-          genreSums.add(movie.getRating());
-          genreCounts.add(1);
-        } else {
-          // already have this genre, just add to the totals
-          double newSum = genreSums.get(index) + movie.getRating();
-          genreSums.set(index, newSum);
-
-          int newCount = genreCounts.get(index) + 1;
-          genreCounts.set(index, newCount);
-        }
-      }
-    }
-
-    // turn each genre's total and count into its average
-    Map<String, Double> averages = new LinkedHashMap<>();
-    for (int i = 0; i < genreNames.size(); i++) {
-      double average = genreSums.get(i) / genreCounts.get(i);
-      averages.put(genreNames.get(i), average);
-    }
-
-    chartPanel.setData(averages);
+    chartPanel.setData(sortedAverages);
   }
 
   /**
-   * This is called when Show Top Rated Movies is clicked. It gets the
-   * movies in the selected genre, picks out the highest rated ones,
+   * This method takes a map of genre names to average ratings and returns a
+   * new map with the same entries, but ordered from the highest
+   * rating to the lowest.
+   *
+   * @param unsorted the genre averages in whatever order they came in
+   * @return the same genre averages, ordered highest rating first
+   */
+  private Map<String, Double> sortByValueDescending(Map<String, Double> unsorted) {
+    // we copy the entries into a plain list first, so we can search
+    // through it and remove from it as we go
+    List<Map.Entry<String, Double>> remainingEntries = new ArrayList<>(unsorted.entrySet());
+    Map<String, Double> sorted = new LinkedHashMap<>();
+
+    // keep finding whichever entry has the highest rating left, adding
+    // it to the sorted map, and removing it, until none are left
+    while (!remainingEntries.isEmpty()) {
+      Map.Entry<String, Double> best = remainingEntries.get(0);
+
+      for (Map.Entry<String, Double> entry : remainingEntries) {
+        if (entry.getValue() > best.getValue()) {
+          best = entry;
+        }
+      }
+
+      sorted.put(best.getKey(), best.getValue());
+      remainingEntries.remove(best);
+    }
+
+    return sorted;
+  }
+
+  /**
+   * This is called when Show Top Rated Movies is clicked. It asks the
+   * controller for the highest rated movies in the selected genre,
    * charts them, and shows them as cards too.
    */
   private void handleTopRated() {
     String genre = (String) genreDropdown.getSelectedItem();
 
-    // "Genre: All" means skip genre filtering
-    List<Movie> candidates;
-    if (genre.equals("Genre: All")) {
-      candidates = controller.getAllMovies();
-    } else {
-      candidates = controller.filterMoviesByGenre(genre);
-    }
-
-    // copy the list so we can remove from it without messing with
-    // whatever the controller gave us
-    List<Movie> remaining = new ArrayList<>(candidates);
-    List<Movie> topMovies = new ArrayList<>();
-
-    int count = Math.min(TOP_RATED_COUNT, remaining.size());
-    for (int i = 0; i < count; i++) {
-      // find the best rated one still left
-      Movie best = remaining.get(0);
-      for (Movie movie : remaining) {
-        if (movie.getRating() > best.getRating()) {
-          best = movie;
-        }
-      }
-      // save it and take it out so next loop finds the next best
-      topMovies.add(best);
-      remaining.remove(best);
-    }
+    List<Movie> topMovies = controller.getTopRatedMovies(genre, TOP_RATED_COUNT);
 
     moviePanel.showMovies(topMovies);
 
@@ -191,5 +166,19 @@ public class StatisticsPanel extends JPanel {
       chartData.put(movie.getTitle(), movie.getRating());
     }
     chartPanel.setData(chartData);
+  }
+
+  /**
+   * This tells Swing how wide this panel wants to be, based on how
+   * wide the chart currently is. Without this, the panel always
+   * reports a width of 0, so the scroll pane around it never knows it
+   * needs to scroll, and bars past the edge get cut off instead.
+   *
+   * @return the size this panel needs to fully show its chart
+   */
+  @Override
+  public Dimension getPreferredSize() {
+    int chartWidth = chartPanel.getPreferredSize().width;
+    return new Dimension(chartWidth, PANEL_HEIGHT);
   }
 }

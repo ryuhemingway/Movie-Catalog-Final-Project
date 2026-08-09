@@ -3,6 +3,7 @@ package student.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import student.model.Catalog;
@@ -114,7 +115,91 @@ public class MovieControllerTest {
         controller.addMovie(secondMovie);
 
         assertEquals(
-                List.of(firstMovie),
-                controller.filterMoviesByRating(8.0, 9.0));
+            List.of(firstMovie),
+            controller.filterMoviesByRating(8.0, 9.0));
+    }
+
+    /**
+     * This tests that getAverageRatingByGenre() correctly averages the
+     * ratings of movies that share a genre.
+     */
+    @Test
+    void getAverageRatingByGenreReturnsCorrectAverages() {
+        // Both movies are Action, with ratings 8.0 and 6.0, so the
+        // average we expect back is 7.0
+        Movie actionMovie = new Movie.Builder("The Matrix", 1999)
+            .genres(List.of("Action"))
+            .rating(8.0)
+            .build();
+        Movie secondActionMovie = new Movie.Builder("Example Movie", 2020)
+            .genres(List.of("Action"))
+            .rating(6.0)
+            .build();
+
+        controller.addMovie(actionMovie);
+        controller.addMovie(secondActionMovie);
+
+        // Ask the controller for the averages instead of calculating
+        // them ourselves here, since that's the method being tested
+        Map<String, Double> averages = controller.getAverageRatingByGenre();
+
+        assertEquals(7.0, averages.get("Action"), 0.001);
+    }
+
+    /**
+     * This tests that getTopRatedMovies() only returns movies from the
+     * genre we asked for, ordered from highest rating to lowest.
+     */
+    @Test
+    void getTopRatedMoviesReturnsHighestRatedMoviesInGenre() {
+        // Two Action movies with different ratings, plus one Drama movie
+        // that should get left out since we're only asking for Action
+        Movie lowerRatedAction = new Movie.Builder("Example Movie", 2020)
+            .genres(List.of("Action"))
+            .rating(6.0)
+            .build();
+        Movie higherRatedAction = new Movie.Builder("The Matrix", 1999)
+            .genres(List.of("Action"))
+            .rating(8.7)
+            .build();
+        Movie dramaMovie = new Movie.Builder("The Godfather", 1972)
+            .genres(List.of("Drama"))
+            .rating(9.2)
+            .build();
+
+        controller.addMovie(lowerRatedAction);
+        controller.addMovie(higherRatedAction);
+        controller.addMovie(dramaMovie);
+
+        List<Movie> topAction = controller.getTopRatedMovies("Action", 10);
+
+        // The Drama movie should not show up here at all, and the
+        // higher rated Action movie should come first
+        assertEquals(List.of(higherRatedAction, lowerRatedAction), topAction);
+    }
+
+    /**
+     * This tests that passing "Genre: All" skips genre filtering, so
+     * movies from every genre are eligible to be in the top rated list.
+     */
+    @Test
+    void getTopRatedMoviesReturnsAcrossAllGenresWhenGenreIsAll() {
+        Movie actionMovie = new Movie.Builder("The Matrix", 1999)
+            .genres(List.of("Action"))
+            .rating(8.7)
+            .build();
+        Movie dramaMovie = new Movie.Builder("The Godfather", 1972)
+            .genres(List.of("Drama"))
+            .rating(9.2)
+            .build();
+
+        controller.addMovie(actionMovie);
+        controller.addMovie(dramaMovie);
+
+        List<Movie> topOverall = controller.getTopRatedMovies("Genre: All", 10);
+
+        // Both movies should show up here, Drama first since it has the
+        // higher rating, even though they're in different genres
+        assertEquals(List.of(dramaMovie, actionMovie), topOverall);
     }
 }

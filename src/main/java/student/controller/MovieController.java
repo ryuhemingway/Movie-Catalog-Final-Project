@@ -1,6 +1,7 @@
 package student.controller;
 
 import java.util.List;
+import java.util.Map;
 import student.model.Movie;
 import student.model.Catalog;
 import student.model.MovieFilter;
@@ -153,5 +154,35 @@ public class MovieController implements IMovieController {
         return randomMovieGenerator.getRandomMovie(genre, minRating, maxRating);
     }
 
+    /**
+     * Finds the average rating for each genre, across every movie.
+     *
+     * @return genre names mapped to their average rating
+     */
+    @Override
+    public Map<String, Double> getAverageRatingByGenre() {
+        return statisticsEngine.getAverageRatingByGenre(catalog.getAllMovies());
+    }
+
+    /**
+     * Finds the highest rated movies in a genre.
+     *
+     * @param genre the genre to filter by, or "Genre: All" for every genre
+     * @param count how many top movies to return
+     * @return the highest rated movies in that genre, best first
+     */
+    @Override
+    public List<Movie> getTopRatedMovies(String genre, int count) {
+        // "Genre: All" means skip genre filtering and look across
+        // every movie instead, same pattern used in filterMovies()
+        List<Movie> candidates;
+        if (genre.equals("Genre: All")) {
+            candidates = catalog.getAllMovies();
+        } else {
+            candidates = movieFilter.filterByGenre(catalog.getAllMovies(), genre);
+        }
+
+        return statisticsEngine.getTopRatedMovies(candidates, count);
+    }
 
 }
