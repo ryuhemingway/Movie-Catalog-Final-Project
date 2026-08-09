@@ -233,9 +233,9 @@ public class ControlPanel extends JPanel {
     add(loadFavoritesButton);
     add(Box.createVerticalStrut(GAP));
 
-    favoritesSearchField = new JTextField("Search Favorites ...");
+    favoritesSearchField = new JTextField("Search, Update or Delete Favorites ...");
     fixSize(favoritesSearchField);
-    addPlaceholderBehavior(favoritesSearchField, "Search Favorites ...");
+    addPlaceholderBehavior(favoritesSearchField, "Search, Update or Delete Favorites ...");
     add(favoritesSearchField);
     add(Box.createVerticalStrut(GAP));
 
