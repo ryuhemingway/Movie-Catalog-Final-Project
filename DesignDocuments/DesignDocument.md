@@ -473,5 +473,3 @@ classDiagram
     MovieFilter ..> Movie
     StatisticsEngine ..> Movie
 ```
-
-*/

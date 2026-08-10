@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This class filters a list of movies by genre, rating range, or language.
+ * This class filters a list of movies by genre, rating range
  *
  * <p>{@code MovieFilter} does not hold a reference to the {@link Catalog} itself.
  * Instead, each method takes in a list of movies (typically obtained from
