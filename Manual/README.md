@@ -5,6 +5,9 @@ Team Members:
 - Chiberu Egandu
 - Arushi Haniyur
 - Robin Rojano
+- 
+## Project Proposal
+https://docs.google.com/document/d/1DJLOlP-sGNYYRH18Ik_nxFwqUQRuEEDAVmAfLpSTWA8/edit?usp=sharing
 
 ## Description
 CineVault is a movie catalog application that allows users to collect, organize, and browse movie information. Users can search, filter, add new movies, and maintain a personal favorites list, with each movie storing details such as title, directors, actors, genres, duration, year released, rating, poster image, and overview.
